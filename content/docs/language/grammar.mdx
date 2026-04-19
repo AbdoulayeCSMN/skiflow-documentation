@@ -1,0 +1,137 @@
+---
+title: Grammaire EBNF
+---
+
+import { Callout } from 'nextra/components'
+
+# Grammaire EBNF de SkiFlow
+
+<Callout type="info">
+  Cette grammaire est la référence formelle du langage. Elle est utilisée par `gen_parser.py` pour générer automatiquement le lexer et le parser.
+</Callout>
+
+## Programme
+
+```ebnf
+program        ::= { statement } EOF
+```
+
+## Instructions
+
+```ebnf
+statement      ::= var_decl | fun_decl | unit_decl | if_stmt | while_stmt
+                 | try_stmt | throw_stmt | rethrow_stmt | return_stmt
+                 | match_stmt | import_decl | export_decl | module_decl
+                 | expr_stmt
+```
+
+## Déclarations de variables
+
+```ebnf
+var_decl       ::= 'flow' IDENTIFIER [':' type_annot] ('=' | '<-') expr [';']
+```
+
+## Déclarations de fonctions
+
+```ebnf
+fun_decl       ::= 'fun' IDENTIFIER '(' fun_params ')' [':' type_annot] block
+
+fun_params     ::= [ fun_param { ',' fun_param } ]
+fun_param      ::= IDENTIFIER [':' type_annot] ['=' expr]    -- valeur par défaut
+
+call_args      ::= [ call_arg { ',' call_arg } ]
+call_arg       ::= [IDENTIFIER ':'] expr                      -- arg nommé
+```
+
+## Unités
+
+```ebnf
+unit_decl      ::= 'unit' IDENTIFIER '(' unit_params ')' block
+unit_params    ::= 'in' ':' param_group ',' 'out' ':' param_group
+param_group    ::= IDENTIFIER [':' type_annot] { ',' IDENTIFIER [':' type_annot] }
+```
+
+## Types
+
+```ebnf
+type_annot     ::= base_type | 'Flow' | 'list' | 'fun' | IDENTIFIER
+
+base_type      ::= 'int'   | 'int8'   | 'int16'  | 'int32'  | 'int64'
+                 | 'uint8' | 'uint16' | 'uint32' | 'uint64'
+                 | 'float' | 'float16' | 'bfloat16' | 'float32' | 'float64'
+                 | 'bool'  | 'string' | 'char'   | 'null'
+```
+
+## Structures de contrôle
+
+```ebnf
+if_stmt        ::= 'if' expr block ['else' (block | if_stmt)]
+
+while_stmt     ::= 'while' expr block
+
+match_stmt     ::= 'match' expr '{' { case_branch } [default_branch] '}'
+case_branch    ::= 'case' expr { '|' expr } '=>' (statement | block)
+default_branch ::= 'default' '=>' (statement | block)
+```
+
+## Gestion des erreurs
+
+```ebnf
+try_stmt       ::= 'try' block ['catch' IDENTIFIER block] ['finally' block]
+throw_stmt     ::= 'throw' expr [';']
+rethrow_stmt   ::= 'rethrow' [';']
+```
+
+## Modules
+
+```ebnf
+import_decl    ::= 'import' IDENTIFIER ['as' IDENTIFIER] [';']
+                 | 'from' IDENTIFIER 'import' id_list [';']
+
+export_decl    ::= 'export' (fun_decl | var_decl)
+module_decl    ::= 'module' IDENTIFIER [';']
+
+id_list        ::= IDENTIFIER { ',' IDENTIFIER }
+```
+
+## Expressions
+
+```ebnf
+expr           ::= assignment
+assignment     ::= IDENTIFIER assign_op expr | logic_or
+assign_op      ::= '=' | '<-' | '+=' | '-=' | '*=' | '/=' | '%=' | '**=' | '<<=' | '>>=' | '&=' | '|=' | '^=' | '~='
+
+logic_or       ::= logic_and { ('or' | '||') logic_and }
+logic_and      ::= equality  { ('and' | '&&') equality }
+equality       ::= comparison { ('==' | '!=') comparison }
+comparison     ::= bitwise    { ('<' | '>' | '<=' | '>=') bitwise }
+bitwise        ::= shift      { ('&' | '|' | '^') shift }
+shift          ::= additive   { ('<<' | '>>') additive }
+additive       ::= multiplicative { ('+' | '-') multiplicative }
+multiplicative ::= power      { ('*' | '/' | '%' | 'div') power }
+power          ::= unary      { '**' unary }
+unary          ::= ('!' | '-' | '~' | 'prev') unary | postfix
+postfix        ::= primary { '[' expr ']' | '.' IDENTIFIER | '(' call_args ')' | '++' | '--' }
+primary        ::= NUMBER | STRING | CHAR | BOOL | 'null' | IDENTIFIER
+                 | '(' expr ')' | '[' [expr_list] ']' | lambda | 'prev' IDENTIFIER
+lambda         ::= 'fun' '(' fun_params ')' [':' type_annot] block
+```
+
+## Mots-clés
+
+```
+and or if else fun in out fprint fprintln flow true false null
+while return prev unit import module export as from try catch throw
+finally char div rethrow bool string int float saut break match case default
+int8 int16 int32 int64 uint8 uint16 uint32 uint64
+float16 bfloat16 float32 float64 Flow
+```
+
+## Opérateurs
+
+```
+**=  -->  ->  <-  =>  ==  <<=  >>=  &=  |=  ^=
+<<  >>  &&  ||  !=  <=  >=  ++  --  **
++=  -=  *=  /=  %=  ~=  ..
++  -  *  /  %  |  ~  (  )  {  }  [  ]  ;  :  ,  .  !  =  >  <  @  ?
+```

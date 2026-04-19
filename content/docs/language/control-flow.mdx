@@ -1,0 +1,95 @@
+---
+title: Contrôle de flux
+---
+
+# Contrôle de flux
+
+## Conditions `if / else`
+
+```skiflow
+flow score = 85
+
+if score >= 90 {
+  fprintln("Excellent")
+} else if score >= 75 {
+  fprintln("Bien")
+} else {
+  fprintln("Peut mieux faire")
+}
+```
+
+## Boucle `while`
+
+```skiflow
+flow i = 0
+while i < 10 {
+  fprintln(str(i))
+  i += 1
+}
+```
+
+Les mots-clés `break` et `saut` (continue) sont disponibles :
+
+```skiflow
+flow i = 0
+while true {
+  i += 1
+  if i % 2 == 0 { saut }   // continue
+  if i > 9      { break }
+  fprintln(str(i))
+}
+```
+
+## Pattern Matching (`match`)
+
+```skiflow
+flow jour = "lundi"
+
+match jour {
+  case "lundi"  => fprintln("Début de semaine")
+  case "vendredi" => fprintln("Fin de semaine !")
+  case "samedi" | "dimanche" => fprintln("Week-end")
+  default       => fprintln("Milieu de semaine")
+}
+```
+
+### Match sur des valeurs numériques
+
+```skiflow
+flow code = 404
+
+match code {
+  case 200 => fprintln("OK")
+  case 404 => fprintln("Non trouvé")
+  case 500 => fprintln("Erreur serveur")
+  default  => fprintln("Code inconnu : " + str(code))
+}
+```
+
+## Opérateurs
+
+### Arithmétiques
+| Op | Description |
+|----|-------------|
+| `+` `-` `*` `/` | Basiques |
+| `%` | Modulo |
+| `**` | Puissance |
+| `div` | Division entière |
+| `++` `--` | Incrémentation / décrémentation |
+| `+=` `-=` `*=` `/=` `%=` `**=` | Assignation composée |
+
+### Comparaison & logique
+| Op | Description |
+|----|-------------|
+| `==` `!=` `<` `>` `<=` `>=` | Comparaison |
+| `and` `or` `!` | Logique |
+| `&&` `\|\|` | Logique C-style |
+
+### Flux & bits
+| Op | Description |
+|----|-------------|
+| `->` | Flèche droite (pipeline) |
+| `<-` | Assignation flux |
+| `-->` | Flèche partagée |
+| `<<` `>>` `&` `\|` `^` `~` | Bits |
+| `..` | Range |

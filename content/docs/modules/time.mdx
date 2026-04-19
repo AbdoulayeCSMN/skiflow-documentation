@@ -1,0 +1,40 @@
+---
+title: Module time
+---
+
+# Module `time`
+
+Date, heure et timestamps.
+
+## Import
+
+```skiflow
+import time
+```
+
+## Fonctions natives (sans import)
+
+Ces fonctions sont disponibles globalement :
+
+```skiflow
+now()                    // timestamp actuel (secondes)
+date()                   // date actuelle "YYYY-MM-DD"
+year()  month()  day()
+hour()  minute() second()
+weekday()                // 0=Lundi … 6=Dimanche
+sleep(ms)                // pause en millisecondes
+timestamp_to_date(ts)    // timestamp → "YYYY-MM-DD HH:MM:SS"
+date_to_timestamp(s)     // chaîne → timestamp
+```
+
+## Exemple
+
+```skiflow
+flow début = now()
+// … traitement …
+flow durée = now() - début
+fprintln("Durée : " + str(durée) + "s")
+
+fprintln(date())          // 2026-04-15
+fprintln(year())          // 2026
+```

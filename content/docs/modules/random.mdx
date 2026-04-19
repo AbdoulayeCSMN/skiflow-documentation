@@ -1,0 +1,44 @@
+---
+title: Module random
+---
+
+# Module `random`
+
+Génération de nombres aléatoires.
+
+## Import
+
+```skiflow
+import random
+```
+
+## Fonctions
+
+```skiflow
+random.rand()               // flottant ∈ [0, 1)
+random.rand_int(a, b)       // entier ∈ [a, b]
+random.rand_float(a, b)     // flottant ∈ [a, b)
+random.choice(liste)        // élément aléatoire
+random.shuffle(liste)       // liste mélangée
+random.seed(n)              // fixe la graine
+```
+
+## Fonctions natives (sans import)
+
+```skiflow
+rand()          // flottant ∈ [0, 1)
+srand(graine)   // fixe la graine
+```
+
+## Exemple
+
+```skiflow
+import random
+
+random.seed(42)
+flow dé = random.rand_int(1, 6)
+fprintln("Dé : " + str(dé))
+
+flow tirage = random.choice(["pile", "face"])
+fprintln(tirage)
+```

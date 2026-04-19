@@ -1,0 +1,44 @@
+---
+title: Module func
+---
+
+# Module `func`
+
+Utilitaires fonctionnels purs sur les listes. Ne requiert pas de closures SkiFlow — pour les HOF (`map`, `filter`, `fold`), utilisez les fonctions natives.
+
+## Import
+
+```skiflow
+import func
+```
+
+## Référence
+
+```skiflow
+func.head(l)          // premier élément
+func.tail(l)          // liste sans le premier
+func.reverse(l)       // liste inversée
+func.zip(a, b)        // [[a[0],b[0]], [a[1],b[1]], …]
+func.flatten(l)       // aplatit
+func.range(s, e)      // liste de s à e inclus
+func.repeat(n, val)   // répète val n fois
+func.unique(l)        // sans doublons
+func.sum(l)           // somme
+func.maximum(l)       // maximum
+func.minimum(l)       // minimum
+func.count(l, x)      // occurrences de x
+func.index_of(l, x)   // index de x
+```
+
+## Exemple
+
+```skiflow
+import func
+
+flow l = [1, 2, 3, 4, 5]
+fprintln(func.head(l))          // 1
+fprintln(func.tail(l))          // [2, 3, 4, 5]
+
+flow paires = func.zip([1,2,3], ["a","b","c"])
+// [[1,"a"], [2,"b"], [3,"c"]]
+```

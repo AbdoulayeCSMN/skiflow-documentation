@@ -1,0 +1,93 @@
+---
+title: Variables & Types
+---
+
+import { Callout } from 'nextra/components'
+
+# Variables & Types
+
+En SkiFlow, toutes les variables sont déclarées avec le mot-clé `flow`. L'opérateur d'assignation est `=` ou `<-`.
+
+## Déclaration
+
+```skiflow
+flow nom : type = valeur
+flow nom <- valeur   // inférence de type
+```
+
+### Exemples
+
+```skiflow
+flow age    : int    = 25
+flow pi     : float  = 3.14159
+flow actif  : bool   = true
+flow prénom : string = "Amine"
+flow vide               // null implicite
+```
+
+## Types primitifs
+
+| Type | Description | Exemple |
+|------|-------------|---------|
+| `int` | Entier (64-bit par défaut) | `42` |
+| `float` | Flottant (64-bit par défaut) | `3.14` |
+| `bool` | Booléen | `true`, `false` |
+| `string` | Chaîne de caractères | `"bonjour"` |
+| `char` | Caractère unique | `'a'` |
+| `null` | Valeur nulle | `null` |
+
+## Types numériques précis
+
+SkiFlow supporte des types numériques précis, essentiels pour la data science et le calcul haute performance :
+
+| Entiers signés | Entiers non signés | Flottants |
+|---|---|---|
+| `int8`, `int16`, `int32`, `int64` | `uint8`, `uint16`, `uint32`, `uint64` | `float16`, `bfloat16`, `float32`, `float64` |
+
+```skiflow
+flow poids  : float32 = 0.5
+flow pixels : uint8   = 255
+flow grad   : bfloat16 = 1.0e-3
+```
+
+## Listes
+
+```skiflow
+flow nombres : list = [1, 2, 3, 4, 5]
+flow mixte   = [1, "deux", true, null]
+flow vide    = []
+
+// Accès par index
+flow premier = nombres[0]   // → 1
+```
+
+## Tenseurs (type Flow)
+
+Le type `Flow` représente un tenseur multidimensionnel :
+
+```skiflow
+import tensor
+
+flow t : Flow = tensor.zeros([3, 4])      // matrice 3×4 de zéros
+flow u : Flow = tensor.ones([2, 2, 2])    // tenseur 3D
+flow r : Flow = tensor.rand_tensor([100]) // vecteur aléatoire
+```
+
+## Mutation et `prev`
+
+Par défaut les variables sont mutables. Le mot-clé `prev` accède à la valeur précédente dans un contexte de flux :
+
+```skiflow
+flow compteur = 0
+compteur = compteur + 1
+
+// prev dans une boucle
+while compteur < 10 {
+  flow delta = compteur - prev compteur
+  compteur += 1
+}
+```
+
+<Callout type="warning">
+  `prev` est uniquement disponible dans les contextes de flux temporel (boucles, unités).
+</Callout>

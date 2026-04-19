@@ -1,0 +1,89 @@
+---
+title: Module math
+---
+
+# Module `math`
+
+Le module `math` expose des fonctions mathématiques et des constantes.
+
+## Import
+
+```skiflow
+import math
+```
+
+## Constantes
+
+| Constante | Valeur | Description |
+|-----------|--------|-------------|
+| `math.pi` | `3.14159…` | π |
+| `math.e` | `2.71828…` | Constante d'Euler |
+| `math.inf` | `∞` | Infini positif |
+| `math.nan` | `NaN` | Not a Number |
+
+## Fonctions de base
+
+```skiflow
+math.sqrt(x)     // racine carrée
+math.cbrt(x)     // racine cubique
+math.pow(x, y)   // x^y
+math.abs(x)      // valeur absolue
+```
+
+## Arrondi
+
+```skiflow
+math.floor(x)    // plancher
+math.ceil(x)     // plafond
+math.round(x)    // arrondi
+math.trunc(x)    // troncature vers zéro
+```
+
+## Logarithmes & exponentielles
+
+```skiflow
+math.log(x)      // ln(x)
+math.log2(x)     // log₂(x)
+math.log10(x)    // log₁₀(x)
+math.exp(x)      // e^x
+math.exp2(x)     // 2^x
+math.expm1(x)    // e^x - 1
+math.log1p(x)    // ln(1 + x)
+```
+
+## Trigonométrie
+
+```skiflow
+math.sin(x)      math.asin(x)
+math.cos(x)      math.acos(x)
+math.tan(x)      math.atan(x)
+math.atan2(y, x) // atan(y/x) — 4 quadrants
+math.hypot(x, y) // √(x² + y²)
+```
+
+## Hyperboliques
+
+```skiflow
+math.sinh(x)   math.asinh(x)
+math.cosh(x)   math.acosh(x)
+math.tanh(x)
+```
+
+## Min / Max
+
+```skiflow
+math.min(a, b)
+math.max(a, b)
+```
+
+## Exemple
+
+```skiflow
+import math
+
+flow angle = math.pi / 4
+flow r     = math.sqrt(2.0)
+fprintln(math.sin(angle))       // → 0.7071…
+fprintln(math.cos(angle))       // → 0.7071…
+fprintln(math.pow(r, 2))        // → 2.0
+```

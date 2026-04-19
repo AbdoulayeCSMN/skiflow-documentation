@@ -1,0 +1,42 @@
+---
+title: Module net
+---
+
+# Module `net`
+
+Réseau HTTP et TCP.
+
+## Import
+
+```skiflow
+import net
+```
+
+## HTTP
+
+```skiflow
+net.get(url)                        // requête GET → string
+net.post(url, body)                 // requête POST → string
+net.post_json(url, data)            // POST JSON → string
+net.get_headers(url)                // headers → dict
+```
+
+## TCP
+
+```skiflow
+net.tcp_connect(host, port)         // connexion TCP → socket
+net.tcp_send(socket, données)       // envoie données
+net.tcp_recv(socket, taille)        // reçoit données
+net.tcp_close(socket)               // ferme la connexion
+```
+
+## Exemple
+
+```skiflow
+import net
+import json
+
+flow réponse = net.get("https://api.example.com/data")
+flow data    = json.parse(réponse)
+fprintln(data["status"])
+```

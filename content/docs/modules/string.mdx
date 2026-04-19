@@ -1,0 +1,49 @@
+---
+title: Module string
+---
+
+# Module `string`
+
+Manipulation de chaînes de caractères.
+
+## Import
+
+```skiflow
+import string
+```
+
+## Référence
+
+| Fonction | Description |
+|----------|-------------|
+| `string.upper(s)` | Majuscules |
+| `string.lower(s)` | Minuscules |
+| `string.trim(s)` | Supprime espaces début/fin |
+| `string.trim_left(s)` | Supprime espaces début |
+| `string.trim_right(s)` | Supprime espaces fin |
+| `string.len(s)` | Longueur |
+| `string.split(s, sep)` | Découpe en liste |
+| `string.join(liste, sep)` | Joint une liste |
+| `string.contains(s, sub)` | Contient sous-chaîne ? |
+| `string.starts_with(s, prefix)` | Commence par ? |
+| `string.ends_with(s, suffix)` | Finit par ? |
+| `string.replace(s, old, new)` | Remplace |
+| `string.index_of(s, sub)` | Position première occurrence |
+| `string.substr(s, start, len)` | Sous-chaîne |
+| `string.repeat(s, n)` | Répète n fois |
+| `string.reverse(s)` | Inverse |
+| `string.to_int(s)` | Convertit en entier |
+| `string.to_float(s)` | Convertit en flottant |
+
+## Exemple
+
+```skiflow
+import string
+
+flow s = "  Bonjour SkiFlow  "
+fprintln(string.trim(s))           // "Bonjour SkiFlow"
+fprintln(string.upper(s))          // "  BONJOUR SKIFLOW  "
+
+flow mots = string.split("a,b,c", ",")  // ["a", "b", "c"]
+fprintln(string.join(mots, " | "))      // "a | b | c"
+```

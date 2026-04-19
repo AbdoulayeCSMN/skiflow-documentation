@@ -1,0 +1,43 @@
+---
+title: Module tensor
+---
+
+# Module `tensor`
+
+Tenseurs multidimensionnels pour le calcul scientifique et le machine learning.
+
+## Import
+
+```skiflow
+import tensor
+```
+
+## Création
+
+```skiflow
+tensor.zeros([m, n])          // tenseur de zéros
+tensor.ones([m, n])           // tenseur de uns
+tensor.fill([m, n], val)      // rempli avec val
+tensor.rand_tensor([m, n])    // valeurs aléatoires ∈ [0,1)
+```
+
+## Exemple
+
+```skiflow
+import tensor
+
+flow mat = tensor.zeros([3, 3])
+flow vec = tensor.ones([5])
+flow rng = tensor.rand_tensor([100, 100])
+
+// Indexation
+flow elem = mat[1][2]
+```
+
+## Type `Flow`
+
+Toute valeur créée par le module `tensor` a le type `Flow` :
+
+```skiflow
+flow t : Flow = tensor.zeros([2, 2, 2])  // tenseur 3D
+```

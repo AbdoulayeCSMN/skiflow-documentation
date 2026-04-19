@@ -1,0 +1,33 @@
+---
+title: Module json
+---
+
+# Module `json`
+
+Sérialisation et désérialisation JSON.
+
+## Import
+
+```skiflow
+import json
+```
+
+## Fonctions
+
+```skiflow
+json.parse(s)         // chaîne JSON → valeur SkiFlow
+json.stringify(val)   // valeur SkiFlow → chaîne JSON
+json.pretty(val)      // JSON indenté
+```
+
+## Exemple
+
+```skiflow
+import json
+
+flow data = json.parse('{"nom": "Amine", "score": 99}')
+fprintln(data["nom"])    // Amine
+
+flow sortie = json.stringify([1, 2, {"clé": true}])
+fprintln(sortie)         // [1,2,{"clé":true}]
+```

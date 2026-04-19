@@ -1,0 +1,49 @@
+---
+title: Module io
+---
+
+# Module `io`
+
+Entrées/sorties sur les fichiers et la console.
+
+## Import
+
+```skiflow
+import io
+```
+
+## Lecture
+
+```skiflow
+io.read_file(chemin)           // lit tout le fichier → string
+io.read_lines(chemin)          // lit ligne par ligne → list
+io.read_line()                 // lit une ligne depuis stdin
+```
+
+## Écriture
+
+```skiflow
+io.write_file(chemin, contenu) // écrit dans un fichier
+io.append_file(chemin, contenu)// ajoute à un fichier
+```
+
+## Système de fichiers
+
+```skiflow
+io.exists(chemin)              // fichier/dossier existe ?
+io.delete(chemin)              // supprime
+io.mkdir(chemin)               // crée un dossier
+io.list_dir(chemin)            // liste le contenu → list
+```
+
+## Exemple
+
+```skiflow
+import io
+
+io.write_file("résultat.txt", "Score : 42\n")
+
+flow lignes = io.read_lines("données.csv")
+flow n = list.len(lignes)
+fprintln("Lu " + str(n) + " lignes")
+```

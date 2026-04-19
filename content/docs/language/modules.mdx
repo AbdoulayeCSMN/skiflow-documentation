@@ -1,0 +1,94 @@
+---
+title: Modules & Imports
+---
+
+# Modules & Imports
+
+SkiFlow dispose d'un système modulaire complet permettant d'organiser le code en unités réutilisables.
+
+## Importer un module natif
+
+```skiflow
+import math
+import string
+import list
+import tensor
+import io
+import json
+import net
+import time
+import random
+```
+
+## Utiliser un module
+
+```skiflow
+import math
+
+flow racine = math.sqrt(16.0)   // → 4.0
+flow angle  = math.sin(math.pi / 2)  // → 1.0
+```
+
+## Import sélectif (`from … import`)
+
+```skiflow
+from math import sqrt, pi, sin, cos
+
+flow r = sqrt(25.0)  // → 5.0
+```
+
+## Alias (`as`)
+
+```skiflow
+import tensor as t
+
+flow mat = t.zeros([3, 3])
+```
+
+## Définir un module
+
+```skiflow
+module géométrie
+
+export fun aire_cercle(r : float) : float {
+  import math
+  return math.pi * r * r
+}
+
+export fun périmètre(r : float) : float {
+  import math
+  return 2.0 * math.pi * r
+}
+```
+
+## Importer son propre module
+
+```skiflow
+from géométrie import aire_cercle
+
+flow a = aire_cercle(5.0)  // → 78.539...
+```
+
+## Modules natifs disponibles
+
+| Module | Description |
+|--------|-------------|
+| `math` | Fonctions mathématiques et constantes |
+| `string` | Manipulation de chaînes |
+| `list` | Opérations sur les listes |
+| `func` | Utilitaires fonctionnels (zip, flatten, etc.) |
+| `tensor` | Tenseurs et algèbre linéaire |
+| `io` | Entrées/sorties fichiers |
+| `json` | Sérialisation/désérialisation JSON |
+| `net` | Réseau HTTP/TCP |
+| `time` | Date, heure, timestamp |
+| `random` | Génération aléatoire |
+| `path` | Chemins de fichiers |
+| `queue` | File FIFO |
+| `stack` | Pile LIFO |
+| `tree` | Arbres |
+| `graph` | Graphes |
+| `kern` | Noyaux de convolution |
+| `csv` | Lecture/écriture CSV |
+| `flare` | Visualisation (graphiques HTML) |
+| `fluxnet` | Réseaux de neurones |

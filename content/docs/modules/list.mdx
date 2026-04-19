@@ -1,0 +1,78 @@
+---
+title: Module list
+---
+
+# Module `list`
+
+Opérations sur les listes (tableaux persistants).
+
+## Import
+
+```skiflow
+import list
+```
+
+## Référence complète
+
+### Accès
+
+```skiflow
+list.len(l)           // longueur
+list.get(l, i)        // élément à l'index i (négatif = depuis la fin)
+list.first(l)         // premier élément
+list.last(l)          // dernier élément
+```
+
+### Modification (retourne une nouvelle liste)
+
+```skiflow
+list.push(l, x)       // ajoute x à la fin
+list.pop(l)           // retire le dernier
+list.insert(l, i, x)  // insère x à l'index i
+list.remove(l, i)     // retire l'index i
+list.set(l, i, x)     // remplace l'index i
+```
+
+### Construction
+
+```skiflow
+list.range(n)          // [0, 1, …, n-1]
+list.range(start, end) // [start, …, end-1]
+list.range(s, e, step) // avec pas
+list.repeat(n, val)    // [val, val, …] n fois
+list.concat(a, b)      // concatène a et b
+list.slice(l, s, e)    // sous-liste de s à e
+list.flatten(l)        // aplatit une liste de listes
+list.unique(l)         // supprime les doublons
+list.reverse(l)        // inverse
+```
+
+### Recherche & tri
+
+```skiflow
+list.sort(l)           // tri croissant
+list.sort_desc(l)      // tri décroissant
+list.contains(l, x)    // contient x ?
+list.index_of(l, x)    // index de x (-1 si absent)
+list.count(l, x)       // nombre d'occurrences de x
+```
+
+### Statistiques
+
+```skiflow
+list.sum(l)
+list.minimum(l)
+list.maximum(l)
+list.mean(l)
+```
+
+## Exemple
+
+```skiflow
+import list
+
+flow nums = list.range(1, 11)        // [1..10]
+flow pairs = filter(fun(x) { return x % 2 == 0 }, nums)
+flow somme = list.sum(pairs)          // 30
+fprintln(somme)
+```

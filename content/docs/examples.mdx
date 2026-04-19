@@ -1,0 +1,142 @@
+---
+title: Exemples
+---
+
+import { Tabs } from 'nextra/components'
+
+# Exemples
+
+## Hello World
+
+```skiflow
+fprintln("Bonjour, SkiFlow !")
+```
+
+## Fibonacci
+
+```skiflow
+fun fibonacci(n : int) : int {
+  if n <= 1 { return n }
+  return fibonacci(n - 1) + fibonacci(n - 2)
+}
+
+flow i = 0
+while i <= 10 {
+  fprint(str(fibonacci(i)) + " ")
+  i += 1
+}
+// 0 1 1 2 3 5 8 13 21 34 55
+```
+
+## Tri à bulles
+
+```skiflow
+fun bubble_sort(arr : list) : list {
+  flow n   = list.len(arr)
+  flow res = arr
+  flow i   = 0
+  while i < n {
+    flow j = 0
+    while j < n - i - 1 {
+      if res[j] > res[j+1] {
+        flow tmp   = res[j]
+        res        = list.set(res, j, res[j+1])
+        res        = list.set(res, j+1, tmp)
+      }
+      j += 1
+    }
+    i += 1
+  }
+  return res
+}
+
+flow sorted = bubble_sort([64, 34, 25, 12, 22, 11, 90])
+fprintln(sorted)  // [11, 12, 22, 25, 34, 64, 90]
+```
+
+## Pipeline fonctionnel
+
+```skiflow
+import list
+import math
+
+// Pipeline : générer → filtrer → transformer → réduire
+flow données  = list.range(1, 101)                         // [1..100]
+flow pairs    = filter(fun(x){ return x % 2 == 0 }, données)  // pairs
+flow carrés   = map(fun(x){ return x * x }, pairs)            // carrés
+flow somme    = fold(fun(acc, x){ return acc + x }, 0, carrés) // somme
+
+fprintln("Somme des carrés des nombres pairs de 1 à 100 : " + str(somme))
+```
+
+## Requête HTTP + JSON
+
+```skiflow
+import net
+import json
+
+try {
+  flow réponse = net.get("https://jsonplaceholder.typicode.com/todos/1")
+  flow todo    = json.parse(réponse)
+  fprintln("Titre : " + todo["title"])
+  fprintln("Fait  : " + str(todo["completed"]))
+} catch e {
+  fprintln("Erreur réseau : " + e)
+}
+```
+
+## Gestion des erreurs
+
+```skiflow
+fun diviser_sûr(a : float, b : float) : float {
+  if b == 0.0 { throw "Division par zéro interdite" }
+  return a / b
+}
+
+flow paires = [[10.0, 2.0], [5.0, 0.0], [9.0, 3.0]]
+
+flow i = 0
+while i < list.len(paires) {
+  flow p = paires[i]
+  try {
+    flow r = diviser_sûr(p[0], p[1])
+    fprintln(str(p[0]) + " / " + str(p[1]) + " = " + str(r))
+  } catch e {
+    fprintln("⚠ " + e)
+  }
+  i += 1
+}
+```
+
+## Tenseurs et calcul scientifique
+
+```skiflow
+import tensor
+import math
+
+// Normalisation d'un vecteur
+flow v     = tensor.rand_tensor([5])
+flow norme = math.sqrt(fold(fun(acc, x){ return acc + x*x }, 0.0, v))
+flow v_norm = map(fun(x){ return x / norme }, v)
+
+fprintln("Norme : " + str(norme))
+```
+
+## Pattern Matching avancé
+
+```skiflow
+fun classifier(score : int) : string {
+  match score {
+    case 100         => return "Parfait !"
+    case 90 | 91 | 92 | 93 | 94 | 95 | 96 | 97 | 98 | 99 => return "Excellent"
+    case 75          => return "Bien"
+    default          => {
+      if score >= 60 { return "Passable" }
+      return "Insuffisant"
+    }
+  }
+}
+
+fprintln(classifier(100))  // Parfait !
+fprintln(classifier(85))   // Insuffisant → Passable
+```

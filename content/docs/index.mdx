@@ -1,0 +1,46 @@
+---
+title: Introduction
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Bienvenue dans SkiFlow
+
+**SkiFlow** est un langage de programmation moderne, expressif et typé, conçu pour la data science, le calcul tensoriel et la programmation fonctionnelle. Développé à l'ENSAM Meknès, il s'inspire de la syntaxe des langages de flux de données avec une sémantique proche de Python et OCaml.
+
+<Callout type="info">
+  SkiFlow est actuellement en développement actif. Cette documentation couvre la version **2.0.0**.
+</Callout>
+
+## Pourquoi SkiFlow ?
+
+- **Déclaration de flux** — les variables sont déclarées avec le mot-clé `flow`, reflétant la nature du flux de données.
+- **Typage précis** — types numériques de `int8` à `float64`, tenseurs `Flow`, booléens, chaînes.
+- **Modules natifs riches** — `math`, `string`, `list`, `tensor`, `io`, `net`, `json`, et bien plus.
+- **Programmation fonctionnelle** — `map`, `filter`, `fold`, closures, fonctions d'ordre supérieur.
+- **Gestion des erreurs** — `try / catch / finally / throw / rethrow`.
+- **Pattern matching** — `match / case / default`.
+- **Modules & imports** — système modulaire avec `import`, `export`, `from … as`.
+
+## Premier programme
+
+```skiflow
+// Bonjour le monde
+fprintln("Bonjour, SkiFlow !")
+
+// Variables et calcul
+flow x : int = 42
+flow y : float64 = 3.14
+flow msg : string = "résultat"
+
+fprintln(msg + " : " + str(x + y))
+```
+
+## Explorer la documentation
+
+<Cards>
+  <Cards.Card title="Langage" href="/docs/language/variables" arrow />
+  <Cards.Card title="Modules natifs" href="/docs/modules/math" arrow />
+  <Cards.Card title="Grammaire EBNF" href="/docs/language/grammar" arrow />
+  <Cards.Card title="Exemples" href="/docs/examples" arrow />
+</Cards>

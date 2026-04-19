@@ -1,0 +1,132 @@
+---
+title: Fonctions
+---
+
+import { Callout, Steps } from 'nextra/components'
+
+# Fonctions
+
+Les fonctions sont déclarées avec le mot-clé `fun`. Elles supportent les paramètres typés, les valeurs par défaut et les arguments nommés.
+
+## Syntaxe de base
+
+```skiflow
+fun nom(param1 : type, param2 : type) : type_retour {
+  // corps
+  return valeur
+}
+```
+
+### Exemple simple
+
+```skiflow
+fun addition(a : int, b : int) : int {
+  return a + b
+}
+
+flow résultat = addition(3, 5)  // → 8
+```
+
+## Valeurs par défaut
+
+```skiflow
+fun saluer(nom : string, salut : string = "Bonjour") : string {
+  return salut + ", " + nom + "!"
+}
+
+fprintln(saluer("Amine"))           // → Bonjour, Amine!
+fprintln(saluer("Sara", "Bonsoir")) // → Bonsoir, Sara!
+```
+
+## Arguments nommés
+
+```skiflow
+fun créer_point(x : float, y : float, z : float = 0.0) {
+  fprintln("(" + str(x) + ", " + str(y) + ", " + str(z) + ")")
+}
+
+créer_point(x: 1.0, z: 3.0, y: 2.0)  // ordre libre
+```
+
+## Fonctions d'ordre supérieur
+
+SkiFlow supporte les fonctions comme valeurs de première classe :
+
+```skiflow
+// Passer une fonction en argument
+fun appliquer(f, liste) {
+  return map(f, liste)
+}
+
+flow doubles = appliquer(fun(x) { return x * 2 }, [1, 2, 3, 4])
+// → [2, 4, 6, 8]
+```
+
+## Closures
+
+```skiflow
+fun multiplicateur(n : int) {
+  return fun(x : int) {
+    return x * n
+  }
+}
+
+flow fois3 = multiplicateur(3)
+fprintln(fois3(7))  // → 21
+```
+
+## `map`, `filter`, `fold`
+
+Ces fonctions d'ordre supérieur sont natives :
+
+```skiflow
+flow nums = [1, 2, 3, 4, 5, 6]
+
+// map : transformer chaque élément
+flow carrés = map(fun(x) { return x * x }, nums)
+// → [1, 4, 9, 16, 25, 36]
+
+// filter : garder selon condition
+flow pairs = filter(fun(x) { return x % 2 == 0 }, nums)
+// → [2, 4, 6]
+
+// fold : réduire à une valeur
+flow somme = fold(fun(acc, x) { return acc + x }, 0, nums)
+// → 21
+```
+
+## Unités (unit)
+
+Les `unit` sont des blocs fonctionnels avec entrées/sorties explicites, typiques des architectures de flux de données :
+
+```skiflow
+unit normaliseur(in: données : list, out: résultat : list) {
+  flow min_val = list.minimum(données)
+  flow max_val = list.maximum(données)
+  flow range   = max_val - min_val
+  résultat = map(fun(x) { return (x - min_val) / range }, données)
+}
+```
+
+<Callout type="info">
+  Les `unit` permettent de composer des pipelines de traitement de données de façon déclarative.
+</Callout>
+
+## Gestion des erreurs
+
+```skiflow
+fun diviser(a : float, b : float) : float {
+  if b == 0.0 {
+    throw "Division par zéro"
+  }
+  return a / b
+}
+
+try {
+  flow r = diviser(10.0, 0.0)
+} catch e {
+  fprintln("Erreur : " + e)
+} finally {
+  fprintln("Opération terminée")
+}
+```
