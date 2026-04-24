@@ -32,9 +32,11 @@ while i <= 10 {
 
 ```skiflow
 fun bubble_sort(arr : list) : list {
+
   flow n   = list.len(arr)
   flow res = arr
   flow i   = 0
+
   while i < n {
     flow j = 0
     while j < n - i - 1 {
@@ -89,6 +91,7 @@ try {
 
 ```skiflow
 fun diviser_sûr(a : float, b : float) : float {
+
   if b == 0.0 { throw "Division par zéro interdite" }
   return a / b
 }
@@ -98,6 +101,7 @@ flow paires = [[10.0, 2.0], [5.0, 0.0], [9.0, 3.0]]
 flow i = 0
 while i < list.len(paires) {
   flow p = paires[i]
+
   try {
     flow r = diviser_sûr(p[0], p[1])
     fprintln(str(p[0]) + " / " + str(p[1]) + " = " + str(r))
@@ -126,11 +130,12 @@ fprintln("Norme : " + str(norme))
 
 ```skiflow
 fun classifier(score : int) : string {
+
   match score {
-    case 100         => return "Parfait !"
-    case 90 | 91 | 92 | 93 | 94 | 95 | 96 | 97 | 98 | 99 => return "Excellent"
-    case 75          => return "Bien"
-    default          => {
+    100         : return "Parfait !"
+    90          : return "Excellent"
+    75          : return "Bien"
+    default     : {
       if score >= 60 { return "Passable" }
       return "Insuffisant"
     }

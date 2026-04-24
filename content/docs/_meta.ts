@@ -4,4 +4,5 @@ export default {
   modules: 'Modules Natifs',
   sflowmind: 'SFlowMind — IA',
   examples: 'Exemples',
+  "get-start": 'Installation'
 }
