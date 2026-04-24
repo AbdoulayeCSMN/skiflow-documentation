@@ -3,7 +3,6 @@ export default {
   string: 'string',
   list: 'list',
   func: 'func',
-  tensor: 'tensor',
   io: 'io',
   json: 'json',
   net: 'net',

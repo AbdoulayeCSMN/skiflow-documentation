@@ -1,0 +1,365 @@
+---
+title: Structures de données
+---
+
+import { Callout, Tabs } from 'nextra/components'
+
+# Structures de données & Collections
+
+SkiFlow repose sur des **structures de données persistantes** — toute opération retourne une nouvelle valeur sans jamais muter l'original. C'est le cœur du modèle fonctionnel du langage.
+
+---
+
+## PersistentVector — la liste SkiFlow
+
+Le `PersistentVector` (noté `PVec` en interne) est le type collection fondamental de SkiFlow. Il est créé par un littéral `[...]` ou retourné par toute HOF ou opération sur liste.
+
+### Création
+
+```skiflow
+flow vide   = []
+flow nums   = [1, 2, 3, 4, 5]
+flow mixed  = [1, "hello", true, 3.14]
+flow nested = [[1, 2], [3, 4], [5]]
+```
+
+### Accès par index
+
+```skiflow
+flow v = [10, 20, 30, 40]
+
+fprintln v[0]       // 10  — indexation 0-based
+fprintln v[3]       // 40
+fprintln v[-1]      // 40  — index négatif = depuis la fin
+fprintln v[-2]      // 30
+```
+
+### Opérateur `~` — concaténation de chaînes (non de listes)
+
+Pour concaténer deux listes, utilisez `list.concat` ou `flat_map`.
+
+### Itération
+
+```skiflow
+flow colors = ["rouge", "vert", "bleu"]
+
+each(colors, fun(c) {
+    fprintln "  -> " ~ c
+})
+```
+
+---
+
+## Littéraux de liste et ranges
+
+### Range littéral `a..b` / `a..=b`
+
+```skiflow
+flow r1 = 1..10    // [1, 2, …, 9]   exclusif
+flow r2 = 1..=10   // [1, 2, …, 10]  inclusif
+flow r3 = 0..=4    // [0, 1, 2, 3, 4]
+```
+
+Les ranges sont matérialisés en `PersistentVector` au moment de l'évaluation.
+
+```skiflow
+// Utilisation dans un pipe
+flow pairs = 1..=20
+    |> filter(is_even)
+    |> map(square)
+
+fprintln to_string(pairs)
+// PersistentVector[4, 16, 36, 64, 100, 144, 196, 256, 324, 400]
+```
+
+---
+
+## Fonctions d'ordre supérieur (HOF)
+
+Les HOF sont des fonctions natives qui acceptent une liste et une closure.
+
+<Callout type="info">
+  Les HOF peuvent être appelées directement **ou** chaînées avec l'opérateur `|>`.
+</Callout>
+
+### `map(list, fn)` — transformation
+
+```skiflow
+fun double(x) { return x * 2 }
+
+flow result = map([1, 2, 3, 4, 5], double)
+// PersistentVector[2, 4, 6, 8, 10]
+
+// Avec lambda inline
+flow squares = map([1,2,3,4], fun(x){ return x * x })
+```
+
+### `filter(list, pred)` — filtrage
+
+```skiflow
+fun is_even(x) { return x % 2 == 0 }
+fun is_pos(x)  { return x > 0 }
+
+flow evens = filter([1,2,3,4,5,6], is_even)
+// PersistentVector[2, 4, 6]
+
+flow pos = filter([-3, -1, 0, 2, 5], is_pos)
+// PersistentVector[2, 5]
+```
+
+### `fold(list, init, fn)` — réduction
+
+```skiflow
+fun add(a, b) { return a + b }
+fun mul(a, b) { return a * b }
+
+flow sum  = fold([1,2,3,4,5], 0, add)   // 15
+flow prod = fold([1,2,3,4,5], 1, mul)   // 120
+```
+
+### `reduce(list, fn)` — réduction sans valeur initiale
+
+```skiflow
+flow max_val = reduce([3, 7, 1, 9, 4], fun(a, b){ return a > b ? a : b })
+// 9
+```
+
+### `any(list, pred)` / `all(list, pred)`
+
+```skiflow
+flow has_neg = any([-1, 2, 3], fun(x){ return x < 0 })    // true
+flow all_pos = all([1, 2, 3],  fun(x){ return x > 0 })    // true
+flow all_even= all([2, 4, 5],  fun(x){ return x % 2 == 0 }) // false
+```
+
+### `zip_with(a, b, fn)` — combinaison élément par élément
+
+```skiflow
+fun mul(a, b){ return a * b }
+
+flow products = zip_with([1,2,3], [10,20,30], mul)
+// PersistentVector[10, 40, 90]
+```
+
+### `flat_map(list, fn)` — map + aplatissement
+
+```skiflow
+fun expand(x){ return [x, x * 10] }
+
+flow result = flat_map([1, 2, 3], expand)
+// PersistentVector[1, 10, 2, 20, 3, 30]
+```
+
+### `take_while(list, pred)` / `drop_while(list, pred)`
+
+```skiflow
+fun is_pos(x){ return x > 0 }
+flow lst = [3, 2, 1, -1, 4, 5]
+
+flow front = take_while(lst, is_pos)   // PersistentVector[3, 2, 1]
+flow rest  = drop_while(lst, is_pos)   // PersistentVector[-1, 4, 5]
+```
+
+### `sort_by(list, key_fn)` — tri par clé
+
+```skiflow
+flow words = ["banane", "pomme", "kiwi", "ananas"]
+fun by_len(s){ return len(s) }
+
+flow sorted = sort_by(words, by_len)
+// PersistentVector[kiwi, pomme, banane, ananas]
+```
+
+### `group_by(list, key_fn)` — regroupement
+
+```skiflow
+fun parity(x){ return x % 2 == 0 ? "pair" : "impair" }
+
+flow groups = group_by([1,2,3,4,5,6], parity)
+// { "impair": [1,3,5], "pair": [2,4,6] }
+```
+
+---
+
+## Opérateur pipe `|>`
+
+`x |> f(args)` équivaut à `f(x, args)` — `x` est inséré comme **premier argument**.
+
+```skiflow
+fun square(x)  { return x * x }
+fun is_even(x) { return x % 2 == 0 }
+fun add(a, b)  { return a + b }
+
+flow result = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    |> filter(is_even)      // [2, 4, 6, 8, 10]
+    |> map(square)          // [4, 16, 36, 64, 100]
+    |> fold(0, add)         // 220
+
+fprintln to_string(result)  // 220
+```
+
+Le pipe est **associatif à droite** et a la **priorité minimale** — toutes les sous-expressions sont évaluées avant la flèche.
+
+---
+
+## Composition `>>`
+
+`f >> g` crée une closure `fun(x){ return g(f(x)) }`.
+
+```skiflow
+fun increment(x){ return x + 1 }
+fun square(x)   { return x * x }
+fun double(x)   { return x * 2 }
+
+flow pipeline = increment >> square >> double
+// pipeline(4) = double(square(4+1)) = double(25) = 50
+
+fprintln to_string(pipeline(4))   // 50
+```
+
+---
+
+## Fonctions d'ordre supérieur avancées
+
+### `partial(fn, arg1, …)` — application partielle
+
+```skiflow
+fun multiply(a, b){ return a * b }
+fun power(base, exp){ return base ** exp }
+
+flow times3 = partial(multiply, 3)
+flow square = partial(power, 2)       // 2^x
+
+fprintln to_string(times3(7))   // 21
+fprintln to_string(square(8))   // 256
+```
+
+### `flip(fn)` — inversion des deux premiers arguments
+
+```skiflow
+fun subtract(a, b){ return a - b }
+flow flipped = flip(subtract)
+
+fprintln to_string(flipped(3, 10))   // 10 - 3 = 7
+```
+
+---
+
+## PersistentMap — dictionnaire immuable
+
+Le `PersistentMap` (ou `PMap`) est une table clé-valeur immuable. En SkiFlow il est créé par des fonctions du module `nsmg` ou via des records.
+
+```skiflow
+// group_by retourne une PMap
+flow grouped = group_by([1,2,3,4,5,6], fun(x){ return x % 2 == 0 ? "pair" : "impair" })
+fprintln to_string(grouped)
+// { pair: PersistentVector[2, 4, 6], impair: PersistentVector[1, 3, 5] }
+```
+
+---
+
+## Module `list` — opérations avancées
+
+Le module `list` expose des opérations sur les `PersistentVector` qui ne sont pas des HOF.
+
+```skiflow
+import list
+
+flow nums = [5, 3, 8, 1, 9, 2, 7, 4, 6]
+
+// Accès
+list.len(nums)          // 9
+list.get(nums, 2)       // 8
+list.first(nums)        // 5
+list.last(nums)         // 6
+
+// Construction
+list.range(1, 11)       // [1, 2, …, 10]
+list.range(0, 10, 2)    // [0, 2, 4, 6, 8]  (avec pas)
+list.make(4, 0)         // [0, 0, 0, 0]
+list.concat([1,2], [3,4]) // [1, 2, 3, 4]
+
+// Transformation (retourne une nouvelle liste)
+list.push(nums, 10)     // append
+list.pop(nums)          // retire le dernier
+list.prepend(nums, 0)   // insert en tête
+list.slice(nums, 2, 5)  // sous-liste [index 2..4]
+list.reverse(nums)      // inversée
+list.sort(nums)         // tri croissant
+list.sort_desc(nums)    // tri décroissant
+list.flatten([[1,2],[3,4]]) // [1, 2, 3, 4]
+list.unique(nums)       // sans doublons
+
+// Recherche
+list.contains(nums, 8)  // true
+list.index_of(nums, 8)  // 2
+
+// Agrégats
+list.sum(nums)          // 45
+list.min(nums)          // 1
+list.max(nums)          // 9
+list.avg(nums)          // 5.0
+
+// Chaînes
+list.join(["a","b","c"], ", ")  // "a, b, c"
+list.is_empty([])               // true
+```
+
+---
+
+## Module `func` — utilitaires fonctionnels purs
+
+```skiflow
+import func
+
+flow data = [5, 3, 8, 1, 9, 2, 7, 4, 6]
+
+func.head(data)           // 5
+func.tail(data)           // [3, 8, 1, 9, 2, 7, 4, 6]
+func.reverse(data)        // [6, 4, 7, 2, 9, 1, 8, 3, 5]
+func.sorted(data)         // [1, 2, 3, 4, 5, 6, 7, 8, 9]
+func.take(3, data)        // [5, 3, 8]
+func.drop(3, data)        // [1, 9, 2, 7, 4, 6]
+func.sum(data)            // 45
+func.maximum(data)        // 9
+func.minimum(data)        // 1
+func.average(data)        // 5.0
+
+// range avec pas optionnel
+func.range(1, 10, 2)      // [1, 3, 5, 7, 9]  (step=2)
+func.range(0, 9)          // [0, 1, …, 9]
+
+// Répétition
+func.repeat(4, 0)         // [0, 0, 0, 0]
+func.repeat(3, "ok")      // ["ok", "ok", "ok"]
+
+// Combinaisons
+func.zip([1,2,3], [10,20,30])
+// [[1,10], [2,20], [3,30]]
+
+func.enumerate([10,20,30])
+// [[0,10], [1,20], [2,30]]
+
+func.chunks(data, 3)
+// [[5,3,8], [1,9,2], [7,4,6]]
+
+func.flatten([[1,2],[3,4],[5]])
+// [1, 2, 3, 4, 5]
+
+func.unique([1,2,2,3,1,4,3])
+// [1, 2, 3, 4]
+```
+
+---
+
+## Résumé des types de collections
+
+| Type | Littéral | Mutable | Usage principal |
+|------|----------|---------|-----------------|
+| `PersistentVector` | `[1, 2, 3]` | Non | Séquences ordonnées |
+| `PersistentMap` | via `group_by`, NSMG | Non | Associations clé->valeur |
+| Range | `1..10`, `1..=10` | Non | Itération / construction |
+
+<Callout type="warning">
+  **Persistance** — aucune opération ne modifie la structure d'origine. `list.push(l, x)` retourne une **nouvelle liste** ; `l` est inchangé.
+</Callout>

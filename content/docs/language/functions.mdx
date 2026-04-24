@@ -24,7 +24,7 @@ fun addition(a : int, b : int) : int {
   return a + b
 }
 
-flow résultat = addition(3, 5)  // → 8
+flow résultat = addition(3, 5)  // -> 8
 ```
 
 ## Valeurs par défaut
@@ -34,8 +34,8 @@ fun saluer(nom : string, salut : string = "Bonjour") : string {
   return salut + ", " + nom + "!"
 }
 
-fprintln(saluer("Amine"))           // → Bonjour, Amine!
-fprintln(saluer("Sara", "Bonsoir")) // → Bonsoir, Sara!
+fprintln(saluer("Amine"))           // -> Bonjour, Amine!
+fprintln(saluer("Sara", "Bonsoir")) // -> Bonsoir, Sara!
 ```
 
 ## Arguments nommés
@@ -55,11 +55,11 @@ SkiFlow supporte les fonctions comme valeurs de première classe :
 ```skiflow
 // Passer une fonction en argument
 fun appliquer(f, liste) {
-  return map(f, liste)
+  return map(liste, f)
 }
 
 flow doubles = appliquer(fun(x) { return x * 2 }, [1, 2, 3, 4])
-// → [2, 4, 6, 8]
+fprintln (doubles)      // → [2, 4, 6, 8]
 ```
 
 ## Closures
@@ -72,7 +72,7 @@ fun multiplicateur(n : int) {
 }
 
 flow fois3 = multiplicateur(3)
-fprintln(fois3(7))  // → 21
+fprintln(fois3(7))  // -> 21
 ```
 
 ## `map`, `filter`, `fold`
@@ -80,19 +80,20 @@ fprintln(fois3(7))  // → 21
 Ces fonctions d'ordre supérieur sont natives :
 
 ```skiflow
+
 flow nums = [1, 2, 3, 4, 5, 6]
 
 // map : transformer chaque élément
-flow carrés = map(fun(x) { return x * x }, nums)
-// → [1, 4, 9, 16, 25, 36]
+flow carres = map(nums, fun(x) { return x * x })
+fprint(carres) // -> [1, 4, 9, 16, 25, 36]
 
 // filter : garder selon condition
-flow pairs = filter(fun(x) { return x % 2 == 0 }, nums)
-// → [2, 4, 6]
+flow pairs = filter(nums, fun(x) { return x % 2 == 0 })
+fprint(pairs) // -> [2, 4, 6]
 
 // fold : réduire à une valeur
-flow somme = fold(fun(acc, x) { return acc + x }, 0, nums)
-// → 21
+flow somme = fold(nums, 0, fun(acc, x) { return acc + x })
+fprint(somme) // -> 21
 ```
 
 ## Unités (unit)
@@ -100,11 +101,13 @@ flow somme = fold(fun(acc, x) { return acc + x }, 0, nums)
 Les `unit` sont des blocs fonctionnels avec entrées/sorties explicites, typiques des architectures de flux de données :
 
 ```skiflow
-unit normaliseur(in: données : list, out: résultat : list) {
-  flow min_val = list.minimum(données)
-  flow max_val = list.maximum(données)
+import list
+
+unit normaliseur(in: donnees, out: resultat) {
+  flow min_val = list.minimum(donnees)
+  flow max_val = list.maximum(donnees)
   flow range   = max_val - min_val
-  résultat = map(fun(x) { return (x - min_val) / range }, données)
+  resultat = map(donnees, fun(x) { return (x - min_val) / range })
 }
 ```
 

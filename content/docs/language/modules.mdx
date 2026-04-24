@@ -25,8 +25,8 @@ import random
 ```skiflow
 import math
 
-flow racine = math.sqrt(16.0)   // → 4.0
-flow angle  = math.sin(math.pi / 2)  // → 1.0
+flow racine = math.sqrt(16.0)   // -> 4.0
+flow angle  = math.sin(math.pi / 2)  // -> 1.0
 ```
 
 ## Import sélectif (`from … import`)
@@ -34,7 +34,7 @@ flow angle  = math.sin(math.pi / 2)  // → 1.0
 ```skiflow
 from math import sqrt, pi, sin, cos
 
-flow r = sqrt(25.0)  // → 5.0
+flow r = sqrt(25.0)  // -> 5.0
 ```
 
 ## Alias (`as`)
@@ -48,14 +48,14 @@ flow mat = t.zeros([3, 3])
 ## Définir un module
 
 ```skiflow
-module géométrie
+module geometrie
 
 export fun aire_cercle(r : float) : float {
   import math
   return math.pi * r * r
 }
 
-export fun périmètre(r : float) : float {
+export fun perimetre(r : float) : float {
   import math
   return 2.0 * math.pi * r
 }
@@ -64,9 +64,9 @@ export fun périmètre(r : float) : float {
 ## Importer son propre module
 
 ```skiflow
-from géométrie import aire_cercle
+import aire_cercle from geometrie
 
-flow a = aire_cercle(5.0)  // → 78.539...
+flow a = aire_cercle(5.0)  // -> 78.539...
 ```
 
 ## Modules natifs disponibles

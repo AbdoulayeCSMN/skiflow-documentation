@@ -18,6 +18,7 @@ Ces fonctions sont disponibles globalement :
 
 ```skiflow
 now()                    // timestamp actuel (secondes)
+now_ms()                 // timestamp actuel (secondes) avec de chiffres apres la virgule
 date()                   // date actuelle "YYYY-MM-DD"
 year()  month()  day()
 hour()  minute() second()
@@ -25,6 +26,7 @@ weekday()                // 0=Lundi … 6=Dimanche
 sleep(ms)                // pause en millisecondes
 timestamp_to_date(ts)    // timestamp → "YYYY-MM-DD HH:MM:SS"
 date_to_timestamp(s)     // chaîne → timestamp
+
 ```
 
 ## Exemple

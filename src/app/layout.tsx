@@ -30,10 +30,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="fr" suppressHydrationWarning>
       <body>
         <Layout
-          navbar={<Navbar logo={<Logo />} projectLink="https://github.com" />}
+          navbar={<Navbar logo={<Logo />} projectLink="https://github.com/AbdoulayeCSMN/" />}
           footer={<Footer>MIT {new Date().getFullYear()} © SkiFlow — ENSAM Meknès</Footer>}
           pageMap={pageMap}
-          docsRepositoryBase="https://github.com/skiflow/skiflow"
+          docsRepositoryBase="https://github.com/AbdoulayeCSMN/skiflow-docs"
         >
           {children}
         </Layout>

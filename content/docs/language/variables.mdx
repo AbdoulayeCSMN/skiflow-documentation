@@ -6,7 +6,8 @@ import { Callout } from 'nextra/components'
 
 # Variables & Types
 
-En SkiFlow, toutes les variables sont déclarées avec le mot-clé `flow`. L'opérateur d'assignation est `=` ou `<-`.
+En SkiFlow, toutes les variables sont déclarées avec le mot-clé `flow`. L'opérateur d'assignation est `=` ou `<-`
+ou `->` selon le contexte.
 
 ## Déclaration
 
@@ -29,7 +30,7 @@ flow vide               // null implicite
 
 | Type | Description | Exemple |
 |------|-------------|---------|
-| `int` | Entier (64-bit par défaut) | `42` |
+| `int` | Entier (32-bit par défaut) | `42` |
 | `float` | Flottant (64-bit par défaut) | `3.14` |
 | `bool` | Booléen | `true`, `false` |
 | `string` | Chaîne de caractères | `"bonjour"` |
@@ -58,20 +59,12 @@ flow mixte   = [1, "deux", true, null]
 flow vide    = []
 
 // Accès par index
-flow premier = nombres[0]   // → 1
+flow premier = nombres[0]   // -> 1
 ```
 
 ## Tenseurs (type Flow)
 
 Le type `Flow` représente un tenseur multidimensionnel :
-
-```skiflow
-import tensor
-
-flow t : Flow = tensor.zeros([3, 4])      // matrice 3×4 de zéros
-flow u : Flow = tensor.ones([2, 2, 2])    // tenseur 3D
-flow r : Flow = tensor.rand_tensor([100]) // vecteur aléatoire
-```
 
 ## Mutation et `prev`
 

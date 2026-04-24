@@ -46,10 +46,10 @@ while true {
 flow jour = "lundi"
 
 match jour {
-  case "lundi"  => fprintln("Début de semaine")
-  case "vendredi" => fprintln("Fin de semaine !")
-  case "samedi" | "dimanche" => fprintln("Week-end")
-  default       => fprintln("Milieu de semaine")
+  "lundi": fprintln("Début de semaine")
+  "vendredi": fprintln("Fin de semaine !")
+  "samedi": "dimanche" => fprintln("Week-end")
+  default:  fprintln("Milieu de semaine")
 }
 ```
 
@@ -59,10 +59,10 @@ match jour {
 flow code = 404
 
 match code {
-  case 200 => fprintln("OK")
-  case 404 => fprintln("Non trouvé")
-  case 500 => fprintln("Erreur serveur")
-  default  => fprintln("Code inconnu : " + str(code))
+  200 : fprintln("OK")
+  404 : fprintln("Non trouvé")
+  500 : fprintln("Erreur serveur")
+  default  : fprintln("Code inconnu : " + str(code))
 }
 ```
 
@@ -91,5 +91,4 @@ match code {
 | `->` | Flèche droite (pipeline) |
 | `<-` | Assignation flux |
 | `-->` | Flèche partagée |
-| `<<` `>>` `&` `\|` `^` `~` | Bits |
 | `..` | Range |

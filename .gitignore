@@ -13,10 +13,13 @@
 # testing
 /coverage
 
+tester.skf
 # next.js
 /.next/
 /out/
 
+*.zip
+.skiflow
 # production
 /build
 
