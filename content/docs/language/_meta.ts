@@ -4,5 +4,4 @@ export default {
   'control-flow': 'Contrôle de flux',
   'data-structures': 'Collections & Données',
   modules: 'Modules & Imports',
-  grammar: 'Grammaire EBNF',
 }

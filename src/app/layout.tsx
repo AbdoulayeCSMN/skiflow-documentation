@@ -1,5 +1,6 @@
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
 import { getPageMap } from 'nextra/page-map'
+import { SkiFlowDomHighlighter } from '../components/skiflow-dom-highlighter'
 import 'nextra-theme-docs/style.css'
 
 export const metadata = {
@@ -29,6 +30,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="fr" suppressHydrationWarning>
       <body>
+        <SkiFlowDomHighlighter />
         <Layout
           navbar={<Navbar logo={<Logo />} projectLink="https://github.com/AbdoulayeCSMN/" />}
           footer={<Footer>MIT {new Date().getFullYear()} © SkiFlow — ENSAM Meknès</Footer>}

@@ -104,6 +104,7 @@ Les `unit` sont des blocs fonctionnels avec entrées/sorties explicites, typique
 import list
 
 unit normaliseur(in: donnees, out: resultat) {
+  
   flow min_val = list.minimum(donnees)
   flow max_val = list.maximum(donnees)
   flow range   = max_val - min_val

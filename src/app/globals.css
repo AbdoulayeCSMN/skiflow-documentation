@@ -3,4 +3,110 @@
 :root {
   --nextra-primary-hue: 250;
   --nextra-primary-saturation: 89%;
+  --sf-comment: #7c8aa0;
+  --sf-string: #0f766e;
+  --sf-keyword: #1d4ed8;
+  --sf-type: #7c3aed;
+  --sf-builtin: #c2410c;
+  --sf-boolean: #b45309;
+  --sf-number: #dc2626;
+  --sf-operator: #111827;
+  --sf-copy-bg: rgba(15, 23, 42, 0.82);
+  --sf-copy-fg: #f8fafc;
+}
+
+.dark {
+  --sf-comment: #94a3b8;
+  --sf-string: #34d399;
+  --sf-keyword: #93c5fd;
+  --sf-type: #d8b4fe;
+  --sf-builtin: #fdba74;
+  --sf-boolean: #fcd34d;
+  --sf-number: #fca5a5;
+  --sf-operator: #e5e7eb;
+  --sf-copy-bg: rgba(15, 23, 42, 0.92);
+  --sf-copy-fg: #ffffff;
+}
+
+.nextra-code code.nextra-code .sf-comment {
+  display: inline !important;
+  color: var(--sf-comment) !important;
+  font-style: italic !important;
+}
+
+.nextra-code code.nextra-code .sf-string {
+  display: inline !important;
+  color: var(--sf-string) !important;
+}
+
+.nextra-code code.nextra-code .sf-keyword {
+  display: inline !important;
+  color: var(--sf-keyword) !important;
+  font-weight: 600 !important;
+}
+
+.nextra-code code.nextra-code .sf-type {
+  display: inline !important;
+  color: var(--sf-type) !important;
+}
+
+.nextra-code code.nextra-code .sf-builtin {
+  display: inline !important;
+  color: var(--sf-builtin) !important;
+}
+
+.nextra-code code.nextra-code .sf-boolean,
+.nextra-code code.nextra-code .sf-number {
+  display: inline !important;
+  color: var(--sf-number) !important;
+}
+
+.nextra-code code.nextra-code .sf-boolean {
+  color: var(--sf-boolean) !important;
+}
+
+.nextra-code code.nextra-code .sf-operator {
+  display: inline !important;
+  color: var(--sf-operator) !important;
+}
+
+.nextra-code {
+  position: relative;
+}
+
+.nextra-code .sf-copy-button {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 9999px;
+  padding: 0.35rem 0.7rem;
+  background: var(--sf-copy-bg);
+  color: var(--sf-copy-fg);
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: transform 120ms ease, background-color 120ms ease, border-color 120ms ease;
+}
+
+.nextra-code .sf-copy-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(96, 165, 250, 0.5);
+}
+
+.nextra-code .sf-copy-button:active {
+  transform: translateY(0);
+}
+
+.nextra-code code.nextra-code .sf-comment,
+.nextra-code code.nextra-code .sf-string,
+.nextra-code code.nextra-code .sf-keyword,
+.nextra-code code.nextra-code .sf-type,
+.nextra-code code.nextra-code .sf-builtin,
+.nextra-code code.nextra-code .sf-boolean,
+.nextra-code code.nextra-code .sf-number,
+.nextra-code code.nextra-code .sf-operator {
+  white-space: pre;
 }
