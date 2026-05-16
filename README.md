@@ -10,7 +10,7 @@
 [![C++](https://img.shields.io/badge/runtime-C++17-orange.svg)](CMakeLists.txt)
 [![Rust](https://img.shields.io/badge/aiki-Rust-red.svg)](https://github.com/harzourou/aiki)
 
-*Développé à l'ENSAM Meknès par C. Aboulaye — filière IATD-SI*
+*Développé C. Aboulaye — filière*
 
 </div>
 
