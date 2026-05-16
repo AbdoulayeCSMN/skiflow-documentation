@@ -1,0 +1,174 @@
+---
+title: Téléchargement
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Télécharger Harzourou
+
+<div
+  style={{
+    position: 'relative',
+    overflow: 'hidden',
+    borderRadius: '1.4rem',
+    padding: '2rem',
+    margin: '1rem 0 1.75rem',
+    background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(37, 99, 235, 0.55))',
+    color: '#ffffff',
+    boxShadow: '0 24px 60px rgba(15, 23, 42, 0.22)',
+  }}
+>
+  <div
+    style={{
+      position: 'absolute',
+      inset: '-35% -10% auto auto',
+      width: '18rem',
+      height: '18rem',
+      borderRadius: '9999px',
+      background: 'radial-gradient(circle, rgba(168, 85, 247, 0.38), transparent 68%)',
+      filter: 'blur(6px)',
+      pointerEvents: 'none',
+    }}
+  />
+  <div style={{ position: 'relative', maxWidth: '42rem' }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
+      <span style={{ borderRadius: '9999px', padding: '0.28rem 0.7rem', background: 'rgba(255,255,255,0.14)', fontSize: '0.78rem', fontWeight: 700 }}>Stable</span>
+      <span style={{ borderRadius: '9999px', padding: '0.28rem 0.7rem', background: 'rgba(255,255,255,0.14)', fontSize: '0.78rem', fontWeight: 700 }}>SHA256</span>
+      <span style={{ borderRadius: '9999px', padding: '0.28rem 0.7rem', background: 'rgba(255,255,255,0.14)', fontSize: '0.78rem', fontWeight: 700 }}>x64</span>
+    </div>
+
+    <h1 style={{ margin: 0, fontSize: 'clamp(2.2rem, 5vw, 3.7rem)', lineHeight: 1.05, letterSpacing: '-0.04em' }}>
+      Télécharger Harzourou pour Windows
+    </h1>
+
+    <p style={{ margin: '1rem 0 1.4rem', fontSize: '1.08rem', lineHeight: 1.7, color: 'rgba(255,255,255,0.88)' }}>
+      Distribution officielle des binaires Harzourou. Installateur Windows, informations de release et archives disponibles.
+    </p>
+
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
+      <a
+        href="/downloads/Harzourou-Setup-Windows-x64.exe"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.5rem',
+          padding: '0.9rem 1.25rem',
+          borderRadius: '0.8rem',
+          fontWeight: 800,
+          textDecoration: 'none',
+          background: 'linear-gradient(90deg,#f8fafc,#e2e8f0)',
+          color: '#0f172a',
+          boxShadow: '0 12px 30px rgba(15, 23, 42, 0.22)',
+        }}
+      >
+        Télécharger l'installateur Windows
+      </a>
+
+      <a
+        href="#releases-archivees"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0.9rem 1.15rem',
+          borderRadius: '0.8rem',
+          fontWeight: 700,
+          textDecoration: 'none',
+          border: '1px solid rgba(255,255,255,0.24)',
+          color: '#ffffff',
+          background: 'rgba(255,255,255,0.08)',
+        }}
+      >
+        Voir les releases archivées
+      </a>
+    </div>
+  </div>
+</div>
+
+<Callout type="info">
+  Dernière version stable recommandée : <strong>v1.0.0</strong>
+</Callout>
+
+## Version stable
+
+<div style={{ margin: '1.25rem 0 1.5rem' }}>
+  <a
+    href="/downloads/Harzourou-Setup-Windows-x64.exe"
+    style={{
+      display: 'inline-block',
+      padding: '0.8rem 1.15rem',
+      borderRadius: '0.6rem',
+      fontWeight: 700,
+      textDecoration: 'none',
+      background: 'linear-gradient(90deg,#0f766e,#2563eb)',
+      color: '#ffffff',
+      boxShadow: '0 8px 24px rgba(15, 118, 110, 0.28)',
+    }}
+  >
+    Télécharger Harzourou pour Windows (x64)
+  </a>
+</div>
+
+Informations de release :
+
+- Version : `v1.0.0`
+- Système : `Windows 10/11 (x64)`
+- Fichier : `Harzourou-Setup-Windows-x64.exe`
+- SHA-256 : `à renseigner`
+
+## Publication du fichier
+
+Pour diffuser l'installateur depuis ce site, placer le binaire dans :
+
+```text
+public/downloads/Harzourou-Setup-Windows-x64.exe
+```
+
+Le lien public sera automatiquement :
+
+```text
+/downloads/Harzourou-Setup-Windows-x64.exe
+```
+
+## Vérifier le checksum (Windows)
+
+```powershell
+Get-FileHash .\Harzourou-Setup-Windows-x64.exe -Algorithm SHA256
+```
+
+## Build depuis les sources
+
+Harzourou peut être compilé sur Windows, Linux et macOS avec CMake :
+
+```bash
+git clone https://github.com/harzourou/harzourou
+cd harzourou
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
+```
+
+Le binaire produit se nomme `harz` (ou `harz.exe` sur Windows).
+
+## Releases archivées {#releases-archivees}
+
+| Version | Plateforme | Fichier | État |
+|---------|------------|---------|------|
+| `v1.0.0` | Windows x64 | `Harzourou-Setup-Windows-x64.exe` | ✅ Stable |
+| `v1.0.0` | Linux x64 | Build depuis sources | ✅ Stable |
+| `v1.0.0` | macOS arm64/x64 | Build depuis sources | ✅ Stable |
+
+<Cards>
+  <Cards.Card title="Guide d'installation" href="/docs/get-start" arrow>
+    Étapes d'installation, PATH, et premier programme
+  </Cards.Card>
+  <Cards.Card title="Aiki — Package Manager" href="/docs/aiki" arrow>
+    Gérer vos dépendances avec Aiki
+  </Cards.Card>
+</Cards>
+
+## Notes de sécurité
+
+<Callout type="warning">
+  Ne distribuer que des binaires signés ou accompagnés d'un hash SHA-256 vérifié.
+</Callout>

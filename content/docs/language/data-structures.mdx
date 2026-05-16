@@ -6,17 +6,17 @@ import { Callout, Tabs } from 'nextra/components'
 
 # Structures de données & Collections
 
-SkiFlow repose sur des **structures de données persistantes** — toute opération retourne une nouvelle valeur sans jamais muter l'original. C'est le cœur du modèle fonctionnel du langage.
+Harzourou repose sur des **structures de données persistantes** — toute opération retourne une nouvelle valeur sans jamais muter l'original. C'est le cœur du modèle fonctionnel du langage.
 
 ---
 
-## PersistentVector — la liste SkiFlow
+## PersistentVector — la liste Harzourou
 
-Le `PersistentVector` (noté `PVec` en interne) est le type collection fondamental de SkiFlow. Il est créé par un littéral `[...]` ou retourné par toute HOF ou opération sur liste.
+Le `PersistentVector` (noté `PVec` en interne) est le type collection fondamental de Harzourou. Il est créé par un littéral `[...]` ou retourné par toute HOF ou opération sur liste.
 
 ### Création
 
-```skiflow
+```harzourou
 flow vide   = []
 flow nums   = [1, 2, 3, 4, 5]
 flow mixed  = [1, "hello", true, 3.14]
@@ -25,7 +25,7 @@ flow nested = [[1, 2], [3, 4], [5]]
 
 ### Accès par index
 
-```skiflow
+```harzourou
 flow v = [10, 20, 30, 40]
 
 fprintln v[0]       // 10  — indexation 0-based
@@ -40,7 +40,7 @@ Pour concaténer deux listes, utilisez `list.concat` ou `flat_map`.
 
 ### Itération
 
-```skiflow
+```harzourou
 flow colors = ["rouge", "vert", "bleu"]
 
 each(colors, fun(c) {
@@ -54,7 +54,7 @@ each(colors, fun(c) {
 
 ### Range littéral `a..b` / `a..=b`
 
-```skiflow
+```harzourou
 flow r1 = 1..10    // [1, 2, …, 9]   exclusif
 flow r2 = 1..=10   // [1, 2, …, 10]  inclusif
 flow r3 = 0..=4    // [0, 1, 2, 3, 4]
@@ -62,7 +62,7 @@ flow r3 = 0..=4    // [0, 1, 2, 3, 4]
 
 Les ranges sont matérialisés en `PersistentVector` au moment de l'évaluation.
 
-```skiflow
+```harzourou
 // Utilisation dans un pipe
 flow pairs = 1..=20
     |> filter(is_even)
@@ -84,7 +84,7 @@ Les HOF sont des fonctions natives qui acceptent une liste et une closure.
 
 ### `map(list, fn)` — transformation
 
-```skiflow
+```harzourou
 fun double(x) { return x * 2 }
 
 flow result = map([1, 2, 3, 4, 5], double)
@@ -96,7 +96,7 @@ flow squares = map([1,2,3,4], fun(x){ return x * x })
 
 ### `filter(list, pred)` — filtrage
 
-```skiflow
+```harzourou
 fun is_even(x) { return x % 2 == 0 }
 fun is_pos(x)  { return x > 0 }
 
@@ -109,7 +109,7 @@ flow pos = filter([-3, -1, 0, 2, 5], is_pos)
 
 ### `fold(list, init, fn)` — réduction
 
-```skiflow
+```harzourou
 fun add(a, b) { return a + b }
 fun mul(a, b) { return a * b }
 
@@ -119,14 +119,14 @@ flow prod = fold([1,2,3,4,5], 1, mul)   // 120
 
 ### `reduce(list, fn)` — réduction sans valeur initiale
 
-```skiflow
+```harzourou
 flow max_val = reduce([3, 7, 1, 9, 4], fun(a, b){ return a > b ? a : b })
 // 9
 ```
 
 ### `any(list, pred)` / `all(list, pred)`
 
-```skiflow
+```harzourou
 flow has_neg = any([-1, 2, 3], fun(x){ return x < 0 })    // true
 flow all_pos = all([1, 2, 3],  fun(x){ return x > 0 })    // true
 flow all_even= all([2, 4, 5],  fun(x){ return x % 2 == 0 }) // false
@@ -134,7 +134,7 @@ flow all_even= all([2, 4, 5],  fun(x){ return x % 2 == 0 }) // false
 
 ### `zip_with(a, b, fn)` — combinaison élément par élément
 
-```skiflow
+```harzourou
 fun mul(a, b){ return a * b }
 
 flow products = zip_with([1,2,3], [10,20,30], mul)
@@ -143,7 +143,7 @@ flow products = zip_with([1,2,3], [10,20,30], mul)
 
 ### `flat_map(list, fn)` — map + aplatissement
 
-```skiflow
+```harzourou
 fun expand(x){ return [x, x * 10] }
 
 flow result = flat_map([1, 2, 3], expand)
@@ -152,7 +152,7 @@ flow result = flat_map([1, 2, 3], expand)
 
 ### `take_while(list, pred)` / `drop_while(list, pred)`
 
-```skiflow
+```harzourou
 fun is_pos(x){ return x > 0 }
 flow lst = [3, 2, 1, -1, 4, 5]
 
@@ -162,7 +162,7 @@ flow rest  = drop_while(lst, is_pos)   // PersistentVector[-1, 4, 5]
 
 ### `sort_by(list, key_fn)` — tri par clé
 
-```skiflow
+```harzourou
 flow words = ["banane", "pomme", "kiwi", "ananas"]
 fun by_len(s){ return len(s) }
 
@@ -172,7 +172,7 @@ flow sorted = sort_by(words, by_len)
 
 ### `group_by(list, key_fn)` — regroupement
 
-```skiflow
+```harzourou
 fun parity(x){ return x % 2 == 0 ? "pair" : "impair" }
 
 flow groups = group_by([1,2,3,4,5,6], parity)
@@ -185,7 +185,7 @@ flow groups = group_by([1,2,3,4,5,6], parity)
 
 `x |> f(args)` équivaut à `f(x, args)` — `x` est inséré comme **premier argument**.
 
-```skiflow
+```harzourou
 fun square(x)  { return x * x }
 fun is_even(x) { return x % 2 == 0 }
 fun add(a, b)  { return a + b }
@@ -206,7 +206,7 @@ Le pipe est **associatif à droite** et a la **priorité minimale** — toutes l
 
 `f >> g` crée une closure `fun(x){ return g(f(x)) }`.
 
-```skiflow
+```harzourou
 fun increment(x){ return x + 1 }
 fun square(x)   { return x * x }
 fun double(x)   { return x * 2 }
@@ -223,7 +223,7 @@ fprintln to_string(pipeline(4))   // 50
 
 ### `partial(fn, arg1, …)` — application partielle
 
-```skiflow
+```harzourou
 fun multiply(a, b){ return a * b }
 fun power(base, exp){ return base ** exp }
 
@@ -236,7 +236,7 @@ fprintln to_string(square(8))   // 256
 
 ### `flip(fn)` — inversion des deux premiers arguments
 
-```skiflow
+```harzourou
 fun subtract(a, b){ return a - b }
 flow flipped = flip(subtract)
 
@@ -247,9 +247,9 @@ fprintln to_string(flipped(3, 10))   // 10 - 3 = 7
 
 ## PersistentMap — dictionnaire immuable
 
-Le `PersistentMap` (ou `PMap`) est une table clé-valeur immuable. En SkiFlow il est créé par des fonctions du module `nsmg` ou via des records.
+Le `PersistentMap` (ou `PMap`) est une table clé-valeur immuable. En Harzourou il est créé par des fonctions du module `nsmg` ou via des records.
 
-```skiflow
+```harzourou
 // group_by retourne une PMap
 flow grouped = group_by([1,2,3,4,5,6], fun(x){ return x % 2 == 0 ? "pair" : "impair" })
 fprintln to_string(grouped)
@@ -262,7 +262,7 @@ fprintln to_string(grouped)
 
 Le module `list` expose des opérations sur les `PersistentVector` qui ne sont pas des HOF.
 
-```skiflow
+```harzourou
 import list
 
 flow nums = [5, 3, 8, 1, 9, 2, 7, 4, 6]
@@ -309,7 +309,7 @@ list.is_empty([])               // true
 
 ## Module `func` — utilitaires fonctionnels purs
 
-```skiflow
+```harzourou
 import func
 
 flow data = [5, 3, 8, 1, 9, 2, 7, 4, 6]

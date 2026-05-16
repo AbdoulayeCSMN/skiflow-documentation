@@ -6,7 +6,7 @@ title: Contrôle de flux
 
 ## Conditions `if / else`
 
-```skiflow
+```harzourou
 flow score = 85
 
 if score >= 90 {
@@ -20,7 +20,7 @@ if score >= 90 {
 
 ## Boucle `while`
 
-```skiflow
+```harzourou
 flow i = 0
 while i < 10 {
   fprintln(str(i))
@@ -30,48 +30,66 @@ while i < 10 {
 
 Les mots-clés `break` et `saut` (continue) sont disponibles :
 
-```skiflow
+```harzourou
 flow i = 0
 
 while true {
   i += 1
-  if i % 2 == 0 { saut }   // continue
+  if i % 2 == 0 { saut }   // continue : passer à l'itération suivante
   if i > 9      { break }
   fprintln(str(i))
 }
+// Affiche : 1 3 5 7 9
 ```
 
 ## Pattern Matching (`match`)
 
-```skiflow
+```harzourou
 flow jour = "lundi"
 
 match jour {
-  "lundi": fprintln("Début de semaine")
-  "vendredi": fprintln("Fin de semaine !")
+  "lundi":   fprintln("Début de semaine")
+  "vendredi":fprintln("Fin de semaine !")
   "samedi": "dimanche" => fprintln("Week-end")
-  default:  fprintln("Milieu de semaine")
+  default:   fprintln("Milieu de semaine")
 }
 ```
 
 ### Match sur des valeurs numériques
 
-```skiflow
+```harzourou
 flow code = 404
 
 match code {
   200 : fprintln("OK")
   404 : fprintln("Non trouvé")
   500 : fprintln("Erreur serveur")
-  default  : fprintln("Code inconnu : " + str(code))
+  default : fprintln("Code inconnu : " ~ str(code))
+}
+```
+
+### Match avec bloc
+
+```harzourou
+fun classifier(score : int) : string {
+  match score {
+    100  : return "Parfait !"
+    90   : return "Excellent"
+    75   : return "Bien"
+    default : {
+      if score >= 60 { return "Passable" }
+      return "Insuffisant"
+    }
+  }
 }
 ```
 
 ## Opérateurs
 
 ### Arithmétiques
-| Op | Description |
-|----|-------------|
+
+| Opérateur | Description |
+|-----------|-------------|
 | `+` `-` `*` `/` | Basiques |
 | `%` | Modulo |
 | `**` | Puissance |
@@ -80,16 +98,38 @@ match code {
 | `+=` `-=` `*=` `/=` `%=` `**=` | Assignation composée |
 
 ### Comparaison & logique
-| Op | Description |
-|----|-------------|
+
+| Opérateur | Description |
+|-----------|-------------|
 | `==` `!=` `<` `>` `<=` `>=` | Comparaison |
-| `and` `or` `!` | Logique |
-| `&&` `\|\|` | Logique C-style |
+| `and` `or` `!` | Logique mot-clé |
+| `&&` `\|\|` | Logique style C |
 
 ### Flux & bits
-| Op | Description |
-|----|-------------|
-| `->` | Flèche droite (pipeline) |
+
+| Opérateur | Description |
+|-----------|-------------|
+| `\|>` | Pipe (injecte à gauche comme 1er argument) |
+| `>>` | Composition de fonctions |
+| `->` | Flèche droite (pipeline déclaratif) |
 | `<-` | Assignation flux |
-| `-->` | Flèche partagée |
-| `..` | Range |
+| `..` / `..=` | Range exclusif / inclusif |
+| `~` | Concaténation de chaînes |
+
+## Gestion des erreurs
+
+```harzourou
+fun safe_div(a : float, b : float) : float {
+  if b == 0.0 { throw "Division par zéro" }
+  return a / b
+}
+
+try {
+  fprintln(safe_div(10.0, 2.0))   // 5.0
+  fprintln(safe_div(10.0, 0.0))   // throw
+} catch e {
+  fprintln("⚠ " ~ e)
+} finally {
+  fprintln("Terminé")
+}
+```

@@ -107,7 +107,7 @@ function highlight(source: string, palette: Palette): string {
   return html
 }
 
-function applySkiFlowHighlighting(root: ParentNode = document) {
+function applyHarzourouHighlighting(root: ParentNode = document) {
   const blocks = root.querySelectorAll<HTMLElement>('div.nextra-code pre code.nextra-code')
   const darkMode = document.documentElement.classList.contains('dark')
   const palette = darkMode ? DARK_PALETTE : LIGHT_PALETTE
@@ -146,14 +146,14 @@ function applySkiFlowHighlighting(root: ParentNode = document) {
   }
 }
 
-export function SkiFlowDomHighlighter() {
+export function HarzourouDomHighlighter() {
   useEffect(() => {
-    applySkiFlowHighlighting()
+    applyHarzourouHighlighting()
 
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (!(mutation.target instanceof HTMLElement)) continue
-        applySkiFlowHighlighting(mutation.target)
+        applyHarzourouHighlighting(mutation.target)
       }
     })
 

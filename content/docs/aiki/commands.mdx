@@ -1,0 +1,208 @@
+---
+title: Commandes Aiki
+---
+
+import { Callout } from 'nextra/components'
+
+# Commandes Aiki
+
+## Référence complète
+
+| Commande | Description |
+|----------|-------------|
+| `aiki init` | Initialise un nouveau projet Harzourou |
+| `aiki install` | Installe toutes les dépendances de `Aiki.toml` |
+| `aiki add <pkg>` | Ajoute une dépendance |
+| `aiki add <pkg>@<ver>` | Ajoute une version précise |
+| `aiki remove <pkg>` | Retire une dépendance |
+| `aiki update` | Met à jour toutes les dépendances |
+| `aiki update <pkg>` | Met à jour un seul paquet |
+| `aiki run <script>` | Lance un script nommé |
+| `aiki build` | Compile le projet |
+| `aiki build --release` | Compile en mode release |
+| `aiki clean` | Supprime les artefacts |
+| `aiki clean --lockfile` | Supprime aussi le lockfile |
+| `aiki search <query>` | Recherche dans le registre |
+| `aiki info` | Liste les paquets installés |
+| `aiki info <pkg>` | Détails d'un paquet |
+| `aiki doctor` | Vérifie l'environnement |
+| `aiki version` | Affiche la version d'Aiki |
+
+**Flag global :** `--verbose` / `-v` — sortie détaillée sur toutes les commandes.
+
+---
+
+## `aiki init`
+
+Initialise un nouveau projet dans le dossier courant.
+
+```bash
+aiki init                    # interactif
+aiki init --name mon-projet  # avec nom
+aiki init --yes              # sans prompts (valeurs par défaut)
+```
+
+Crée :
+- `Aiki.toml` — manifeste
+- `main.harz` — point d'entrée
+- `.aiki/` — répertoire géré par Aiki
+- `.gitignore` — avec `.aiki/` pré-ajouté
+
+---
+
+## `aiki add`
+
+Ajoute une dépendance et l'installe immédiatement.
+
+```bash
+aiki add math               # dernière version
+aiki add math@1.0.0         # version exacte
+aiki add math --version 1.0.0
+aiki add assert -D          # dépendance de développement
+```
+
+Sortie :
+
+```text
+→ Adding math@2.0.0
+✓ Added math@2.0.0 to dependencies
+✓ Lockfile updated
+```
+
+---
+
+## `aiki install`
+
+Installe toutes les dépendances déclarées dans `Aiki.toml`.
+
+```bash
+aiki install            # installation normale
+aiki install --force    # force la réinstallation
+```
+
+---
+
+## `aiki remove`
+
+Retire une dépendance du projet.
+
+```bash
+aiki remove math
+aiki remove math --keep-files   # retire du manifeste mais conserve les fichiers
+```
+
+---
+
+## `aiki run`
+
+Lance un script depuis `[scripts]` dans `Aiki.toml`. Les flags `harz` sont injectés automatiquement.
+
+```bash
+aiki run start                   # script "start"
+aiki run test                    # script "test"
+aiki run start --interpret       # avec --interpret → harz --interpret
+aiki run start --no-opt          # désactive l'optimiseur HIR
+aiki run start --no-opt-bc       # désactive l'optimiseur bytecode
+aiki run start --stats           # affiche les stats d'optimisation
+```
+
+<Callout type="info">
+  Les flags `--interpret`, `--no-opt`, `--no-opt-bc` et `--stats` sont directement transmis à `harz`.
+</Callout>
+
+---
+
+## `aiki build`
+
+Compile le projet via `harz`.
+
+```bash
+aiki build                        # mode debug
+aiki build --release              # mode release
+aiki build --entry src/main.harz  # point d'entrée alternatif
+```
+
+---
+
+## `aiki update`
+
+Met à jour les dépendances vers la dernière version compatible.
+
+```bash
+aiki update              # toutes les dépendances
+aiki update math         # un seul paquet
+aiki update --dry-run    # prévisualiser sans appliquer
+```
+
+Sortie :
+
+```text
+→ Checking for updates…
+
+  → math  1.0.0 → 2.0.0
+✓ 1 package updated
+✓ Lockfile updated
+```
+
+---
+
+## `aiki doctor`
+
+Vérifie l'environnement complet.
+
+```bash
+aiki doctor
+```
+
+Sortie exemple :
+
+```text
+Harzourou Runtime
+  ✓ harz binary  /usr/local/bin/harz  Harzourou v1.0.0
+  ✓ HARZOUROU_PATH  /usr/local/lib/HarzourouModules
+
+Project
+  ✓ Project root  /home/user/mon-projet
+  ✓ Aiki.toml  mon-projet v0.1.0
+  ✓ Lockfile is up to date
+  ✓ Entry point  main.harz
+
+Aiki Config
+  • Using defaults (no config file at /home/user/.aiki/config.toml)
+
+aiki doctor complete.
+```
+
+---
+
+## `aiki search`
+
+Recherche des paquets dans le registre.
+
+```bash
+aiki search math
+aiki search statistics
+```
+
+---
+
+## `aiki info`
+
+Affiche les informations sur les dépendances.
+
+```bash
+aiki info           # toutes les dépendances
+aiki info math      # un seul paquet
+```
+
+---
+
+## `aiki clean`
+
+Supprime les artefacts de build et le cache.
+
+```bash
+aiki clean                 # artefacts + paquets installés
+aiki clean --build-only    # artefacts uniquement
+aiki clean --lockfile      # + supprime Aiki.lock
+```

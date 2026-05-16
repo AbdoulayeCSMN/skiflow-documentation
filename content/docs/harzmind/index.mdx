@@ -1,0 +1,132 @@
+---
+title: HarzMind — Vue d'ensemble
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# HarzMind
+
+**HarzMind** est la bibliothèque d'IA embarquée de Harzourou — un ensemble de modules C++ purs (zéro dépendance externe) accessibles directement depuis le langage Harzourou via `import`.
+
+> Développé par C. Abdoulaye — ENSAM Meknès, filière IATD-SI.  
+> Code source : [github.com/harzourou/harzmind](https://github.com/harzourou/harzmind)
+
+---
+
+## Modules disponibles
+
+<Cards>
+  <Cards.Card title="nsmg" href="/docs/harzmind/nsmg" arrow>
+    NeuroSymbolic Memory Graph — graphe de connaissances avec propagation d'activation et apprentissage différentiable
+  </Cards.Card>
+  <Cards.Card title="ael" href="/docs/harzmind/ael" arrow>
+    Adaptive Execution Lattice — treillis de décision avec Q-learning, UCT, rollouts et apprentissage fédéré multi-agents
+  </Cards.Card>
+  <Cards.Card title="qsf" href="/docs/harzmind/qsf" arrow>
+    Quantum Semantic Field — champ sémantique quantique avec amplitudes complexes, superposition et intrication
+  </Cards.Card>
+  <Cards.Card title="qnsg" href="/docs/harzmind/qnsg" arrow>
+    Quantum NeuroSymbolic Graph — fusion NSMG + QSF avec propagation par interférence quantique et similarité Born-rule
+  </Cards.Card>
+</Cards>
+
+---
+
+## Architecture globale
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                      Harzourou                          │
+│  import nsmg   import ael   import qsf   import qnsg    │
+└──────────┬───────────┬───────────┬──────────┬───────────┘
+           │           │           │          │
+    ┌──────▼──┐  ┌─────▼──┐ ┌─────▼──┐ ┌────▼────┐
+    │  NSMG   │  │  AEL   │ │  QSF   │ │  QNSG   │
+    │ Graphe  │  │Treillis│ │ Champ  │ │ Graphe  │
+    │neuro-   │  │décision│ │quant.  │ │quantique│
+    │symbol.  │  │adaptatif│ │sémant. │ │neuro-   │
+    └──────┬──┘  └────────┘ └────────┘ │symbol.  │
+           │  embeddings                └────┬────┘
+    ┌──────▼──────────────────────────────┐  │
+    │   HNSW Index — ANN approximé        │◄─┘
+    │   nsmg_diff — rétropropagation SGD  │
+    │   ai_serial — sauvegarde .aidb      │
+    └─────────────────────────────────────┘
+```
+
+---
+
+## Paradigme commun
+
+Tous les modules HarzMind suivent le même patron :
+
+```harzourou
+// 1. Créer une instance
+flow g = nsmg.new(128)
+
+// 2. Construire la structure
+flow noeud_a = nsmg.add(g, "concept_A")
+flow noeud_b = nsmg.add(g, "concept_B")
+nsmg.link(g, noeud_a, noeud_b, 0.8, 2)
+
+// 3. Calculer
+nsmg.activate(g, noeud_a, 1.0)
+nsmg.spread(g, noeud_a)
+
+// 4. Lire les résultats
+fprintln(nsmg.activation(g, noeud_b))
+
+// 5. Persister
+nsmg.save(g, "graph.aidb")
+```
+
+---
+
+## Intégration fonctionnelle
+
+HarzMind s'intègre naturellement avec le cœur fonctionnel de Harzourou :
+
+```harzourou
+import nsmg
+import func
+
+flow g = nsmg.new(64)
+flow concepts = ["chien", "chat", "oiseau", "poisson", "reptile"]
+
+// Ajouter tous les nœuds avec map
+flow ids = map(concepts, fun(label){ return nsmg.add(g, label) })
+
+// Pipeline d'analyse
+flow n_nodes = nsmg.node_count(g)
+flow activations = func.range(0, n_nodes - 1)
+    |> map(fun(i){ return nsmg.activation(g, i) })
+    |> filter(fun(a){ return a > 0.1 })
+
+fprintln("Nœuds actifs : " ~ str(activations))
+```
+
+---
+
+## Format de persistance `.aidb`
+
+Tous les modules supportent `save` / `load` vers un fichier binaire `.aidb` (AI DataBase) :
+
+```harzourou
+nsmg.save(g, "knowledge.aidb")
+flow g2 = nsmg.load("knowledge.aidb")
+```
+
+<Callout type="warning">
+  Le format `.aidb` est spécifique à HarzMind v2. Les fichiers produits par une version antérieure ne sont pas garantis compatibles.
+</Callout>
+
+## Installer avec Aiki
+
+HarzMind sera disponible comme paquet Aiki :
+
+```bash
+aiki add nsmg
+aiki add ael
+aiki add qsf
+aiki add qnsg
+```

@@ -4,11 +4,11 @@ title: Module math
 
 # Module `math`
 
-Le module `math` expose des fonctions mathématiques et des constantes.
+Le module `math` expose des fonctions mathématiques classiques, des constantes et des tests numériques.
 
 ## Import
 
-```skiflow
+```harzourou
 import math
 ```
 
@@ -18,72 +18,86 @@ import math
 |-----------|--------|-------------|
 | `math.pi` | `3.14159…` | π |
 | `math.e` | `2.71828…` | Constante d'Euler |
+| `math.tau` | `6.28318…` | τ = 2π |
 | `math.inf` | `∞` | Infini positif |
 | `math.nan` | `NaN` | Not a Number |
 
 ## Fonctions de base
 
-```skiflow
-math.sqrt(x)     // racine carrée
-math.cbrt(x)     // racine cubique
-math.pow(x, y)   // x^y
-math.abs(x)      // valeur absolue
+```harzourou
+math.sqrt(x)      // racine carrée
+math.cbrt(x)      // racine cubique
+math.pow(x, y)    // x^y
+math.abs(x)       // valeur absolue
+math.sign(x)      // signe : -1, 0 ou 1
 ```
 
 ## Arrondi
 
-```skiflow
-math.floor(x)    // plancher
-math.ceil(x)     // plafond
-math.round(x)    // arrondi
-math.trunc(x)    // troncature vers zéro
+```harzourou
+math.floor(x)     // plancher
+math.ceil(x)      // plafond
+math.round(x)     // arrondi au plus proche
+math.trunc(x)     // troncature vers zéro
 ```
 
 ## Logarithmes & exponentielles
 
-```skiflow
-math.log(x)      // ln(x)
-math.log2(x)     // log₂(x)
-math.log10(x)    // log₁₀(x)
-math.exp(x)      // e^x
-math.exp2(x)     // 2^x
-math.expm1(x)    // e^x - 1
-math.log1p(x)    // ln(1 + x)
+```harzourou
+math.log(x)       // ln(x)
+math.log2(x)      // log₂(x)
+math.log10(x)     // log₁₀(x)
+math.exp(x)       // e^x
+math.exp2(x)      // 2^x
+math.expm1(x)     // e^x - 1  (précis près de 0)
+math.log1p(x)     // ln(1 + x) (précis près de 0)
 ```
 
 ## Trigonométrie
 
-```skiflow
-math.sin(x)      math.asin(x)
-math.cos(x)      math.acos(x)
-math.tan(x)      math.atan(x)
-math.atan2(y, x) // atan(y/x) — 4 quadrants
-math.hypot(x, y) // √(x² + y²)
+```harzourou
+math.sin(x)       math.asin(x)
+math.cos(x)       math.acos(x)
+math.tan(x)       math.atan(x)
+math.atan2(y, x)  // atan(y/x) — 4 quadrants
+math.hypot(x, y)  // √(x² + y²)
 ```
 
 ## Hyperboliques
 
-```skiflow
-math.sinh(x)   math.asinh(x)
-math.cosh(x)   math.acosh(x)
-math.tanh(x)
+```harzourou
+math.sinh(x)    math.asinh(x)
+math.cosh(x)    math.acosh(x)
+math.tanh(x)    math.atanh(x)
 ```
 
-## Min / Max
+## Min / Max / Clamp
 
-```skiflow
+```harzourou
 math.min(a, b)
 math.max(a, b)
+math.clamp(x, lo, hi)   // max(lo, min(x, hi))
 ```
 
-## Exemple
+## Tests numériques
 
-```skiflow
+```harzourou
+math.is_nan(x)    // x est NaN ?
+math.is_inf(x)    // x est infini ?
+math.is_finite(x) // x est un nombre fini ?
+```
+
+## Exemple complet
+
+```harzourou
 import math
 
-flow angle = math.pi / 4
+flow angle = math.pi / 4          // 45°
 flow r     = math.sqrt(2.0)
-fprintln(math.sin(angle))       // → 0.7071…
-fprintln(math.cos(angle))       // → 0.7071…
-fprintln(math.pow(r, 2))        // → 2.0
+
+fprintln(math.sin(angle))         // 0.7071…
+fprintln(math.cos(angle))         // 0.7071…
+fprintln(math.pow(r, 2))          // 2.0
+fprintln(math.log(math.e))        // 1.0
+fprintln(math.atan2(1.0, 1.0))    // π/4
 ```

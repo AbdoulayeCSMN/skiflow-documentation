@@ -1,4 +1,321 @@
 ---
-title: Get Start
+title: Installation
 ---
 
+import { Callout, Steps, Tabs } from 'nextra/components'
+
+# Installer Harzourou
+
+Cette page présente l'installation de Harzourou sur Windows, Linux et macOS, la vérification de l'environnement, et la création d'un premier projet avec **Aiki**, le gestionnaire de paquets officiel.
+
+<Callout type="info">
+  Le binaire Windows officiel est disponible sur la page [Téléchargement](/docs/download).  
+  Sur Linux et macOS, la compilation depuis les sources est la méthode recommandée pour l'instant.
+</Callout>
+
+---
+
+## Prérequis
+
+| Prérequis | Version minimale |
+|-----------|-----------------|
+| CMake | 3.20+ |
+| Compilateur C++ | GCC 11 / Clang 14 / MSVC 2022 |
+| Rust + Cargo | 1.75+ (pour Aiki uniquement) |
+| Git | n'importe quelle version récente |
+
+---
+
+## Installation du compilateur `harz`
+
+<Tabs items={["Windows (installateur)", "Linux / macOS (CMake)", "Build manuel avancé"]}>
+
+<Tabs.Tab>
+<Steps>
+### 1. Télécharger l'installateur
+
+Télécharger `Harzourou-Setup-Windows-x64.exe` depuis la page [Téléchargement](/docs/download).
+
+### 2. Exécuter l'installateur
+
+Double-cliquer sur le fichier `.exe` et suivre l'assistant.
+
+Dossier recommandé :
+
+```text
+C:\Program Files\Harzourou\
+```
+
+### 3. Activer l'ajout au PATH
+
+Cocher **Add Harzourou to PATH** dans l'assistant si l'option est proposée.
+
+### 4. Redémarrer le terminal
+
+Fermer puis rouvrir PowerShell pour que `harz` soit reconnu.
+
+### 5. Vérifier
+
+```powershell
+harz --version
+```
+
+Sortie attendue :
+
+```text
+Harzourou v1.0.0
+```
+</Steps>
+</Tabs.Tab>
+
+<Tabs.Tab>
+<Steps>
+### 1. Cloner le dépôt
+
+```bash
+git clone https://github.com/harzourou/harzourou
+cd harzourou
+```
+
+### 2. Compiler
+
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release -j$(nproc)
+```
+
+### 3. Installer dans le PATH
+
+```bash
+# Linux / macOS
+sudo cp build/harz /usr/local/bin/harz
+```
+
+Ou sans droits root :
+
+```bash
+mkdir -p ~/.local/bin
+cp build/harz ~/.local/bin/harz
+# Ajouter ~/.local/bin au PATH si ce n'est pas déjà le cas
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 4. Configurer HARZOUROU_PATH
+
+La variable d'environnement `HARZOUROU_PATH` indique au compilateur où trouver la bibliothèque standard (`HarzourouModules/`) :
+
+```bash
+echo 'export HARZOUROU_PATH="/usr/local/lib/HarzourouModules"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Ou en pointant vers le dossier cloné :
+
+```bash
+export HARZOUROU_PATH="$HOME/harzourou/HarzourouModules"
+```
+
+### 5. Vérifier
+
+```bash
+harz --version
+```
+</Steps>
+</Tabs.Tab>
+
+<Tabs.Tab>
+
+Options de build CMake disponibles :
+
+```bash
+cmake -S . -B build \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr/local
+
+cmake --build build --config Release -j8
+cmake --install build
+```
+
+Pour un build de développement avec debug symbols :
+
+```bash
+cmake -S . -B build-debug -DCMAKE_BUILD_TYPE=Debug
+cmake --build build-debug
+```
+</Tabs.Tab>
+</Tabs>
+
+---
+
+## Premier programme
+
+Créer un fichier `hello.harz` :
+
+```harzourou
+fprintln("Bonjour, Harzourou !")
+
+flow nom = "ENSAM"
+fprintln("Développé à " ~ nom)
+```
+
+Exécuter :
+
+```bash
+harz hello.harz
+```
+
+Sortie :
+
+```text
+Bonjour, Harzourou !
+Développé à ENSAM
+```
+
+---
+
+## Installation d'Aiki (gestionnaire de paquets)
+
+**Aiki** (_"travail"_ en haoussa) est le gestionnaire de paquets officiel de l'écosystème Harzourou. Il gère les dépendances, exécute les scripts et orchestre les builds.
+
+<Steps>
+
+### 1. Prérequis : Rust
+
+```bash
+# Linux / macOS
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source ~/.cargo/env
+```
+
+```powershell
+# Windows — télécharger rustup depuis https://rustup.rs
+rustup-init.exe
+```
+
+### 2. Installer Aiki depuis les sources
+
+```bash
+git clone https://github.com/harzourou/aiki
+cd aiki
+cargo build --release
+sudo cp target/release/aiki /usr/local/bin/aiki  # Linux/macOS
+```
+
+```powershell
+# Windows
+cargo build --release
+Copy-Item target\release\aiki.exe "$env:USERPROFILE\.local\bin\aiki.exe"
+```
+
+### 3. Vérifier
+
+```bash
+aiki version
+# aiki 1.0.0
+```
+
+### 4. Diagnostic de l'environnement
+
+```bash
+aiki doctor
+```
+
+Sortie exemple :
+
+```text
+Harzourou Runtime
+  ✓ harz binary  /usr/local/bin/harz  Harzourou v1.0.0
+  ✓ HARZOUROU_PATH  /usr/local/lib/HarzourouModules
+
+Project
+  • Not inside a Harzourou project
+    → run `aiki init` to create one
+```
+
+</Steps>
+
+---
+
+## Créer un premier projet avec Aiki
+
+```bash
+mkdir mon-projet && cd mon-projet
+aiki init
+```
+
+Sortie :
+
+```text
+→ Creating package `mon-projet`
+✓ Created Aiki.toml
+✓ Created .aiki/
+✓ Created main.harz
+✓ Updated .gitignore
+
+  Package mon-projet initialised.
+
+  Next steps:
+    aiki add <paquet>
+    aiki run start
+```
+
+Fichiers générés :
+
+```text
+mon-projet/
+├── Aiki.toml     ← manifeste du projet
+├── Aiki.lock     ← lockfile (à committer)
+├── main.harz     ← point d'entrée
+└── .gitignore
+```
+
+Ajouter une dépendance et exécuter :
+
+```bash
+aiki add math
+aiki run start
+```
+
+---
+
+## Résolution des problèmes
+
+<Callout type="warning">
+  Si `harz` n'est pas reconnu, le PATH n'est probablement pas configuré. Exécuter `aiki doctor` pour un diagnostic complet.
+</Callout>
+
+### Ajouter Harzourou au PATH manuellement (Windows)
+
+1. Ouvrir **Paramètres système avancés**.
+2. Cliquer sur **Variables d'environnement**.
+3. Dans **Path**, ajouter le dossier contenant `harz.exe`.
+4. Redémarrer le terminal.
+
+### Vérifier le binaire détecté
+
+```bash
+# Linux / macOS
+which harz
+
+# Windows PowerShell
+Get-Command harz
+```
+
+### Vérifier HARZOUROU_PATH
+
+```bash
+echo $HARZOUROU_PATH   # Linux / macOS
+$env:HARZOUROU_PATH    # Windows PowerShell
+```
+
+Si la variable est vide, le compilateur ne trouvera pas les modules de la stdlib. Consulter [Configuration globale d'Aiki](/docs/aiki/config) pour la configurer une fois pour toutes.
+
+---
+
+## Et ensuite
+
+- Découvrir [Variables & Types](/docs/language/variables)
+- Parcourir les [Modules natifs](/docs/modules/math)
+- Apprendre à gérer les dépendances avec [Aiki](/docs/aiki)
+- Essayer les [Exemples complets](/docs/examples)

@@ -1,11 +1,11 @@
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
 import { getPageMap } from 'nextra/page-map'
-import { SkiFlowDomHighlighter } from '../components/skiflow-dom-highlighter'
+import { HarzourouDomHighlighter } from '../components/harzourou-dom-highlighter'
 import 'nextra-theme-docs/style.css'
 
 export const metadata = {
-  title: { default: 'SkiFlow', template: '%s | SkiFlow' },
-  description: 'Documentation officielle du langage SkiFlow',
+  title: { default: 'Harzourou', template: '%s | Harzourou' },
+  description: 'Documentation officielle du langage Harzourou',
 }
 
 const Logo = () => (
@@ -20,7 +20,7 @@ const Logo = () => (
     <path d="M28 8 C35 8 37 18 44 18 C51 18 53 8 60 8" stroke="url(#skig)" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.4"/>
     <path d="M28 18 C35 18 37 28 44 28 C51 28 53 18 60 18" stroke="url(#skig)" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.7"/>
     <path d="M28 28 C35 28 37 38 44 38 C51 38 53 28 60 28" stroke="url(#skig)" strokeWidth="2" strokeLinecap="round" fill="none"/>
-    <text x="68" y="32" fontFamily="Inter, system-ui, sans-serif" fontWeight="700" fontSize="22" fill="url(#skig)">SkiFlow</text>
+    <text x="68" y="32" fontFamily="Inter, system-ui, sans-serif" fontWeight="700" fontSize="22" fill="url(#skig)">Harzourou</text>
   </svg>
 )
 
@@ -30,12 +30,12 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="fr" suppressHydrationWarning>
       <body>
-        <SkiFlowDomHighlighter />
+        <HarzourouDomHighlighter />
         <Layout
           navbar={<Navbar logo={<Logo />} projectLink="https://github.com/AbdoulayeCSMN/" />}
-          footer={<Footer>MIT {new Date().getFullYear()} © SkiFlow — ENSAM Meknès</Footer>}
+          footer={<Footer>MIT {new Date().getFullYear()} © Harzourou — ENSAM Meknès</Footer>}
           pageMap={pageMap}
-          docsRepositoryBase="https://github.com/AbdoulayeCSMN/skiflow-docs"
+          docsRepositoryBase="https://github.com/AbdoulayeCSMN/harzourou-docs"
         >
           {children}
         </Layout>

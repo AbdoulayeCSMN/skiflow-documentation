@@ -6,11 +6,11 @@ import { Callout, Steps } from 'nextra/components'
 
 # Fonctions
 
-Les fonctions sont déclarées avec le mot-clé `fun`. Elles supportent les paramètres typés, les valeurs par défaut et les arguments nommés.
+Les fonctions sont déclarées avec le mot-clé `fun`. Elles supportent les paramètres typés, les valeurs par défaut, les arguments nommés et les closures.
 
 ## Syntaxe de base
 
-```skiflow
+```harzourou
 fun nom(param1 : type, param2 : type) : type_retour {
   // corps
   return valeur
@@ -19,52 +19,52 @@ fun nom(param1 : type, param2 : type) : type_retour {
 
 ### Exemple simple
 
-```skiflow
+```harzourou
 fun addition(a : int, b : int) : int {
   return a + b
 }
 
-flow résultat = addition(3, 5)  // -> 8
+flow résultat = addition(3, 5)  // 8
+fprintln(résultat)
 ```
 
 ## Valeurs par défaut
 
-```skiflow
+```harzourou
 fun saluer(nom : string, salut : string = "Bonjour") : string {
-  return salut + ", " + nom + "!"
+  return salut ~ ", " ~ nom ~ "!"
 }
 
-fprintln(saluer("Amine"))           // -> Bonjour, Amine!
-fprintln(saluer("Sara", "Bonsoir")) // -> Bonsoir, Sara!
+fprintln(saluer("Amine"))            // Bonjour, Amine!
+fprintln(saluer("Sara", "Bonsoir"))  // Bonsoir, Sara!
 ```
 
 ## Arguments nommés
 
-```skiflow
+```harzourou
 fun créer_point(x : float, y : float, z : float = 0.0) {
-  fprintln("(" + str(x) + ", " + str(y) + ", " + str(z) + ")")
+  fprintln("(" ~ str(x) ~ ", " ~ str(y) ~ ", " ~ str(z) ~ ")")
 }
 
-créer_point(x: 1.0, z: 3.0, y: 2.0)  // ordre libre
+créer_point(x: 1.0, z: 3.0, y: 2.0)  // ordre libre → (1.0, 2.0, 3.0)
 ```
 
 ## Fonctions d'ordre supérieur
 
-SkiFlow supporte les fonctions comme valeurs de première classe :
+Harzourou supporte les fonctions comme valeurs de première classe :
 
-```skiflow
-// Passer une fonction en argument
+```harzourou
 fun appliquer(f, liste) {
   return map(liste, f)
 }
 
 flow doubles = appliquer(fun(x) { return x * 2 }, [1, 2, 3, 4])
-fprintln (doubles)      // → [2, 4, 6, 8]
+fprintln(doubles)   // [2, 4, 6, 8]
 ```
 
 ## Closures
 
-```skiflow
+```harzourou
 fun multiplicateur(n : int) {
   return fun(x : int) {
     return x * n
@@ -72,43 +72,70 @@ fun multiplicateur(n : int) {
 }
 
 flow fois3 = multiplicateur(3)
-fprintln(fois3(7))  // -> 21
+fprintln(fois3(7))   // 21
+fprintln(fois3(10))  // 30
 ```
 
 ## `map`, `filter`, `fold`
 
 Ces fonctions d'ordre supérieur sont natives :
 
-```skiflow
-
+```harzourou
 flow nums = [1, 2, 3, 4, 5, 6]
 
-// map : transformer chaque élément
-flow carres = map(nums, fun(x) { return x * x })
-fprint(carres) // -> [1, 4, 9, 16, 25, 36]
+// map — transformer chaque élément
+flow carrés = map(nums, fun(x) { return x * x })
+fprintln(carrés)   // [1, 4, 9, 16, 25, 36]
 
-// filter : garder selon condition
+// filter — garder selon condition
 flow pairs = filter(nums, fun(x) { return x % 2 == 0 })
-fprint(pairs) // -> [2, 4, 6]
+fprintln(pairs)    // [2, 4, 6]
 
-// fold : réduire à une valeur
+// fold — réduire à une valeur
 flow somme = fold(nums, 0, fun(acc, x) { return acc + x })
-fprint(somme) // -> 21
+fprintln(somme)    // 21
 ```
 
-## Unités (unit)
+## Opérateur pipe `|>`
+
+`x |> f(args)` insère `x` comme premier argument de `f` :
+
+```harzourou
+flow résultat = [1, 2, 3, 4, 5, 6]
+    |> filter(fun(x){ return x % 2 == 0 })   // [2, 4, 6]
+    |> map(fun(x){ return x * x })            // [4, 16, 36]
+    |> fold(0, fun(acc, x){ return acc + x }) // 56
+
+fprintln(résultat)  // 56
+```
+
+## Composition `>>`
+
+`f >> g` crée une closure `fun(x){ return g(f(x)) }` :
+
+```harzourou
+fun increment(x){ return x + 1 }
+fun square(x)   { return x * x }
+fun double(x)   { return x * 2 }
+
+flow pipeline = increment >> square >> double
+// pipeline(4) = double(square(5)) = double(25) = 50
+
+fprintln(pipeline(4))   // 50
+```
+
+## Unités (`unit`)
 
 Les `unit` sont des blocs fonctionnels avec entrées/sorties explicites, typiques des architectures de flux de données :
 
-```skiflow
+```harzourou
 import list
 
-unit normaliseur(in: donnees, out: resultat) {
-  
-  flow min_val = list.minimum(donnees)
-  flow max_val = list.maximum(donnees)
+unit normaliseur(in: données, out: résultat) {
+  flow min_val = list.minimum(données)
+  flow max_val = list.maximum(données)
   flow range   = max_val - min_val
-  resultat = map(donnees, fun(x) { return (x - min_val) / range })
+  résultat = map(données, fun(x) { return (x - min_val) / range })
 }
 ```
 
@@ -118,7 +145,7 @@ unit normaliseur(in: donnees, out: resultat) {
 
 ## Gestion des erreurs
 
-```skiflow
+```harzourou
 fun diviser(a : float, b : float) : float {
   if b == 0.0 {
     throw "Division par zéro"
@@ -128,9 +155,30 @@ fun diviser(a : float, b : float) : float {
 
 try {
   flow r = diviser(10.0, 0.0)
+  fprintln(r)
 } catch e {
-  fprintln("Erreur : " + e)
+  fprintln("Erreur : " ~ e)
 } finally {
   fprintln("Opération terminée")
 }
+```
+
+## Application partielle
+
+```harzourou
+fun multiply(a, b){ return a * b }
+
+flow times3 = partial(multiply, 3)
+
+fprintln(times3(7))   // 21
+fprintln(times3(10))  // 30
+```
+
+## `flip` — inversion d'arguments
+
+```harzourou
+fun subtract(a, b){ return a - b }
+flow flipped = flip(subtract)
+
+fprintln(flipped(3, 10))   // 10 - 3 = 7
 ```

@@ -4,42 +4,67 @@ title: Introduction
 
 import { Callout, Cards } from 'nextra/components'
 
-# Bienvenue dans SkiFlow
+# Bienvenue dans Harzourou
 
-**SkiFlow** est un langage de programmation moderne, expressif et typé, conçu pour la data science, le calcul tensoriel et la programmation fonctionnelle. Développé à l'ENSAM Meknès par C. Aboulaye, il s'inspire de la syntaxe des langages de flux de données avec une sémantique proche de Python, kotlin et OCaml.
+**Harzourou** est un langage de programmation moderne, expressif et multi-paradigme, conçu pour la data science, le calcul tensoriel et la programmation fonctionnelle. Développé à l'ENSAM Meknès par C. Aboulaye, il s'inspire des langages de flux de données avec une sémantique proche de Python, Kotlin et OCaml.
 
 <Callout type="info">
-  SkiFlow est actuellement en développement actif. Cette documentation couvre la version **0.2.0**.
+  Harzourou est actuellement en développement actif. Cette documentation couvre la version **1.0.0**.
 </Callout>
 
-## Pourquoi SkiFlow ?
+## Pourquoi Harzourou ?
 
 - **Déclaration de flux** — les variables sont déclarées avec le mot-clé `flow`, reflétant la nature du flux de données.
-- **Typage précis** — types numériques de `int8` à `float64`, tenseurs `Flow`, booléens, chaînes.
-- **Modules natifs riches** — `math`, `string`, `list`, `tensor`, `io`, `net`, `json`, et bien plus.
-- **Programmation fonctionnelle** — `map`, `filter`, `fold`, closures, fonctions d'ordre supérieur.
+- **Typage précis** — types numériques de `int8` à `float64`, booléens, chaînes.
+- **Modules natifs riches** — `math`, `string`, `list`, `func`, `io`, `net`, `json`, `time`, `random`, et bien plus.
+- **Programmation fonctionnelle** — `map`, `filter`, `fold`, closures, opérateur pipe `|>`, composition `>>`.
 - **Gestion des erreurs** — `try / catch / finally / throw / rethrow`.
 - **Pattern matching** — `match / case / default`.
 - **Modules & imports** — système modulaire avec `import`, `from … as`.
+- **Aiki** — gestionnaire de paquets officiel pour gérer dépendances, scripts et builds.
 
 ## Premier programme
 
-```skiflow
-// Bonjour le monde
-fprintln("Bonjour, SkiFlow !")
+```harzourou
+// Bonjour le monde  —  hello.harz
+fprintln("Bonjour, Harzourou !")
 
 // Variables et calcul
-flow x : int = 42
-flow y : float64 = 3.14
+flow x   : int    = 42
+flow pi  : float  = 3.14159
 flow msg : string = "résultat"
 
-fprintln(msg + " : " + str(x + y))
+fprintln(msg ~ " : " ~ str(x))
+
+// Pipeline fonctionnel
+flow résultat = [1..=10]
+    |> filter(fun(n){ return n % 2 == 0 })
+    |> map(fun(n){ return n * n })
+    |> fold(0, fun(acc, n){ return acc + n })
+
+fprintln("Somme des carrés pairs : " ~ str(résultat))  // 220
+```
+
+Exécuter avec :
+
+```bash
+harz hello.harz
 ```
 
 ## Explorer la documentation
 
 <Cards>
-  <Cards.Card title="Langage" href="/docs/language/variables" arrow />
-  <Cards.Card title="Modules natifs" href="/docs/modules/math" arrow />
-  <Cards.Card title="Exemples" href="/docs/examples" arrow />
+  <Cards.Card title="Téléchargement"     href="/docs/download"             arrow />
+  <Cards.Card title="Installation"       href="/docs/get-start"            arrow />
+  <Cards.Card title="Le Langage"         href="/docs/language/variables"   arrow />
+  <Cards.Card title="Modules natifs"     href="/docs/modules/math"         arrow />
+  <Cards.Card title="Aiki"               href="/docs/aiki"                 arrow />
+  <Cards.Card title="Exemples complets"  href="/docs/examples"             arrow />
 </Cards>
+
+## Extensions de fichiers
+
+| Extension | Rôle |
+|-----------|------|
+| `.harz`   | Fichier programme principal |
+| `.mharz`  | Fichier module (Module Harzourou Source File) |

@@ -8,13 +8,13 @@ Réseau HTTP et TCP.
 
 ## Import
 
-```skiflow
+```harzourou
 import net
 ```
 
 ## HTTP
 
-```skiflow
+```harzourou
 net.get(url)                        // requête GET → string
 net.post(url, body)                 // requête POST → string
 net.post_json(url, data)            // POST JSON → string
@@ -23,7 +23,7 @@ net.get_headers(url)                // headers → dict
 
 ## TCP
 
-```skiflow
+```harzourou
 net.tcp_connect(host, port)         // connexion TCP → socket
 net.tcp_send(socket, données)       // envoie données
 net.tcp_recv(socket, taille)        // reçoit données
@@ -32,7 +32,7 @@ net.tcp_close(socket)               // ferme la connexion
 
 ## Exemple
 
-```skiflow
+```harzourou
 import net
 import json
 

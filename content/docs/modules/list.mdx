@@ -8,7 +8,7 @@ Opérations sur les listes (tableaux persistants).
 
 ## Import
 
-```skiflow
+```harzourou
 import list
 ```
 
@@ -16,7 +16,7 @@ import list
 
 ### Accès
 
-```skiflow
+```harzourou
 list.len(l)           // longueur
 list.get(l, i)        // élément à l'index i (négatif = depuis la fin)
 list.first(l)         // premier élément
@@ -25,7 +25,7 @@ list.last(l)          // dernier élément
 
 ### Modification (retourne une nouvelle liste)
 
-```skiflow
+```harzourou
 list.push(l, x)       // ajoute x à la fin
 list.pop(l)           // retire le dernier
 list.insert(l, i, x)  // insère x à l'index i
@@ -35,7 +35,7 @@ list.set(l, i, x)     // remplace l'index i
 
 ### Construction
 
-```skiflow
+```harzourou
 list.range(n)          // [0, 1, …, n-1]
 list.range(start, end) // [start, …, end-1]
 list.range(s, e, step) // avec pas
@@ -49,7 +49,7 @@ list.reverse(l)        // inverse
 
 ### Recherche & tri
 
-```skiflow
+```harzourou
 list.sort(l)           // tri croissant
 list.sort_desc(l)      // tri décroissant
 list.contains(l, x)    // contient x ?
@@ -59,7 +59,7 @@ list.count(l, x)       // nombre d'occurrences de x
 
 ### Statistiques
 
-```skiflow
+```harzourou
 list.sum(l)
 list.minimum(l)
 list.maximum(l)
@@ -68,7 +68,7 @@ list.mean(l)
 
 ## Exemple
 
-```skiflow
+```harzourou
 import list
 
 flow nums = list.range(1, 11)        // [1..10]

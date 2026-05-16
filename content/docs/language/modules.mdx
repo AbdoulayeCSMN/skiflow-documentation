@@ -2,17 +2,19 @@
 title: Modules & Imports
 ---
 
+import { Callout } from 'nextra/components'
+
 # Modules & Imports
 
-SkiFlow dispose d'un système modulaire complet permettant d'organiser le code en unités réutilisables.
+Harzourou dispose d'un système modulaire complet pour organiser le code en unités réutilisables.
 
 ## Importer un module natif
 
-```skiflow
+```harzourou
 import math
 import string
 import list
-import tensor
+import func
 import io
 import json
 import net
@@ -22,42 +24,43 @@ import random
 
 ## Utiliser un module
 
-```skiflow
+```harzourou
 import math
 
-flow racine = math.sqrt(16.0)   // -> 4.0
-flow angle  = math.sin(math.pi / 2)  // -> 1.0
+flow racine = math.sqrt(16.0)        // 4.0
+flow angle  = math.sin(math.pi / 2)  // 1.0
 ```
 
 ## Import sélectif (`from … import`)
 
-**import a, b from Module**
-
-```skiflow
+```harzourou
 from math import {sqrt, pi, sin, cos}
 
-flow r = sqrt(25.0)  // -> 5.0
+flow r = sqrt(25.0)  // 5.0
 ```
 
 ## Alias (`as`)
 
-```skiflow
-import tensor as t
+```harzourou
+import math as m
 
-flow mat = t.zeros([3, 3])
+flow v = m.sqrt(9.0)   // 3.0
 ```
 
-## Définir un module
+## Définir un module (fichier `.mharz`)
 
-```skiflow
+Un module est un fichier `.mharz` commençant par le mot-clé `module` :
+
+```harzourou
+// geometrie.mharz
 module geometrie
 
-export fun aire_cercle(r : float) : float {
+fun aire_cercle(r : float) : float {
   import math
   return math.pi * r * r
 }
 
-export fun perimetre(r : float) : float {
+fun perimetre(r : float) : float {
   import math
   return 2.0 * math.pi * r
 }
@@ -65,11 +68,22 @@ export fun perimetre(r : float) : float {
 
 ## Importer son propre module
 
-```skiflow
-import aire_cercle from geometrie
+```harzourou
+// main.harz
+import geometrie
 
-flow a = aire_cercle(5.0)  // -> 78.539...
+flow a = geometrie.aire_cercle(5.0)   // 78.539…
+flow p = geometrie.perimetre(5.0)     // 31.415…
+fprintln("Aire : " ~ str(a))
+fprintln("Périmètre : " ~ str(p))
 ```
+
+<Callout type="info">
+  Harzourou cherche les modules dans l'ordre :
+  1. Le dossier du fichier courant
+  2. `HARZOUROU_PKG_PATH` (packages installés par Aiki)
+  3. `HARZOUROU_PATH` (bibliothèque standard)
+</Callout>
 
 ## Modules natifs disponibles
 
@@ -77,20 +91,38 @@ flow a = aire_cercle(5.0)  // -> 78.539...
 |--------|-------------|
 | `math` | Fonctions mathématiques et constantes |
 | `string` | Manipulation de chaînes |
-| `list` | Opérations sur les listes |
-| `func` | Utilitaires fonctionnels (zip, flatten, etc.) |
-| `tensor` | Tenseurs et algèbre linéaire |
+| `list` | Opérations sur les listes persistantes |
+| `func` | Utilitaires fonctionnels (zip, flatten, chunks…) |
 | `io` | Entrées/sorties fichiers |
 | `json` | Sérialisation/désérialisation JSON |
 | `net` | Réseau HTTP/TCP |
 | `time` | Date, heure, timestamp |
 | `random` | Génération aléatoire |
 | `path` | Chemins de fichiers |
-| `queue` | File FIFO |
-| `stack` | Pile LIFO |
-| `tree` | Arbres |
-| `graph` | Graphes |
 | `kern` | Noyaux de convolution |
 | `csv` | Lecture/écriture CSV |
 | `flare` | Visualisation (graphiques HTML) |
 | `fluxnet` | Réseaux de neurones |
+| `arithmetic` | Arithmétique étendue (is_prime, pgcd, etc.) |
+| `geometry` | Primitives géométriques 2D/3D |
+| `datetime` | Calculs de date avancés |
+| `dstats` | Statistiques descriptives |
+| `assert` | Framework de tests unitaires |
+| `collections` | Stack, Queue, Deque, Pair |
+
+## Gestion avec Aiki
+
+Les modules tiers sont gérés par **Aiki** :
+
+```bash
+# Ajouter une dépendance
+aiki add math
+
+# Le module est ensuite disponible dans main.harz
+```
+
+```harzourou
+// main.harz — après aiki add math
+import math
+fprintln(math.sqrt(2.0))  // 1.4142…
+```

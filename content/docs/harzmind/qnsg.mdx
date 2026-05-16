@@ -1,0 +1,246 @@
+---
+title: Module qnsg
+---
+
+import { Callout } from 'nextra/components'
+
+# Module `qnsg` — Quantum NeuroSymbolic Graph
+
+Le **QNSG** est la fusion du NSMG et du QSF en une seule structure :
+
+| Dimension | NSMG (réel) | QSF (complexe) | **QNSG** |
+|-----------|------------|----------------|----------|
+| Représentation | `float[D]` | `Complex[D]` | `Complex[D]` |
+| Similarité | Distance euclidienne | Produit scalaire `\|⟨q\|ψ⟩\|²` | **Born rule** |
+| Propagation | Activation BFS | Superposition | **Interférence quantique** |
+| Topologie | Arcs typés (IS_A…) | Aucune | **Arcs typés** |
+
+<Callout type="info">
+  L'interférence quantique modélise naturellement l'**attention** : les concepts aux phases alignées se renforcent mutuellement, les concepts aux phases opposées s'annulent — sans transformeur.
+</Callout>
+
+**Mathématiques :**
+```
+Pour u -> v avec poids w :
+  ψ_v ← normalize(ψ_v + w · ψ_u)    (superposition quantique)
+  a_v  = ‖ψ_v‖²                      (probabilité d'activation, Born rule)
+
+Similarité (remplace euclidienne) :
+  S(query, node) = |⟨query|ψ_node⟩|² ∈ [0, 1]
+```
+
+## Import
+
+```harzourou
+import qnsg
+```
+
+---
+
+## Cycle de vie
+
+### `qnsg.new(wave_dim)` -> graph
+
+Crée un QNSG avec des waves de dimension `wave_dim`.
+
+```harzourou
+flow g = qnsg.new(64)
+```
+
+---
+
+## Construction du graphe
+
+### `qnsg.add(g, label)` -> node_id
+
+Ajoute un nœud avec une wave d'amplitude nulle.
+
+```harzourou
+flow chaud  = qnsg.add(g, "chaud")
+flow tiede  = qnsg.add(g, "tiède")
+flow froid  = qnsg.add(g, "froid")
+```
+
+### `qnsg.add_psi(g, label, wave_list)` -> node_id
+
+Ajoute un nœud en copiant une wave initiale.
+
+```harzourou
+// wave_list : liste de floats (parties réelles, parties imaginaires alternées)
+flow custom = qnsg.add_psi(g, "concept", [0.5, 0.0, 0.3, 0.1, ...])
+```
+
+### `qnsg.link(g, from, to, weight, edge_type)` -> null
+
+Ajoute un arc dirigé pondéré (mêmes types qu'en NSMG).
+
+```harzourou
+qnsg.link(g, chaud, tiede,  0.8, 3)   // RELATED_TO
+qnsg.link(g, tiede, froid,  0.7, 3)
+qnsg.link(g, chaud, froid,  0.3, 3)   // lien faible
+```
+
+### `qnsg.node_count(g)` -> int
+
+### `qnsg.label(g, node_id)` -> string
+
+### `qnsg.find(g, label)` -> int
+
+Recherche O(1) par label. Retourne `-1` si absent.
+
+---
+
+## Activation quantique
+
+### `qnsg.activate(g, node_id)` -> null
+
+Initialise la wave du nœud en état propre (amplitude maximale sur une dimension aléatoire, les autres à 0).
+
+```harzourou
+qnsg.activate(g, chaud)
+```
+
+### `qnsg.spread(g, node_id)` -> null
+
+Propagation par **interférence quantique** BFS depuis `node_id` :
+- Chaque voisin reçoit la superposition `ψ_v ← normalize(ψ_v + w · ψ_u)`.
+- L'activation `a_v = ‖ψ_v‖²` capture l'énergie quantique résultante.
+
+```harzourou
+qnsg.spread(g, chaud)
+fprintln "activation(tiède) = " ~ to_string(qnsg.activation(g, tiede))
+```
+
+### `qnsg.activation(g, node_id)` -> float
+
+Retourne `‖ψ_node‖²` — la probabilité d'activation selon la Born rule.
+
+### `qnsg.decay(g, factor)` -> null
+
+Multiplie les normes de toutes les waves par `factor`.
+
+### `qnsg.reset(g)` -> null
+
+Remet toutes les waves à zéro.
+
+---
+
+## Recherche par similarité Born-rule
+
+### `qnsg.nn_born(g, query_wave_list, k)` -> list\[int\]
+
+Recherche des `k` nœuds les plus similaires à une wave requête.
+La similarité est mesurée par `|⟨query|ψ_node⟩|²` (produit scalaire complexe, pas euclidien).
+
+```harzourou
+// Recherche à partir de la wave du nœud "chaud"
+// (en pratique : récupérer ψ depuis le graphe NSMG si couplé)
+flow voisins = qnsg.nn_born(g, query_wave, 3)
+fprintln "Voisin 1 : " ~ qnsg.label(g, voisins[0])
+```
+
+---
+
+## Observation (collapse)
+
+### `qnsg.observe(g, node_id)` -> int
+
+Observe la wave d'un nœud (collapse) et retourne l'index de dimension maximal.
+La wave est ensuite effondrée sur cette dimension.
+
+```harzourou
+flow dim = qnsg.observe(g, tiede)
+fprintln "Dimension observée : " ~ to_string(dim)
+```
+
+---
+
+## Apprentissage Hebbien quantique
+
+### `qnsg.reinforce(g, from, to, delta)` -> null
+
+Renforce l'arc `from -> to` de `delta` (clampé à \[0, 1\]).
+
+### `qnsg.forget(g, max_age)` -> null
+
+Oubli temporel : atténue les nœuds peu activés récemment.
+
+---
+
+## Persistance
+
+```harzourou
+// Pas de save/load direct en v2 — sérialiser via nsmg.save si couplé
+// ou exporter les embeddings manuellement
+```
+
+<Callout type="warning">
+  Le QNSG v2 ne possède pas encore de fonction `save`/`load` native. Pour persister un graphe, exportez les embeddings avec une boucle Harzourou et rechargez-les via `qnsg.add_psi`.
+</Callout>
+
+---
+
+## Exemple complet — raisonnement par analogie quantique
+
+```harzourou
+import qnsg
+import func
+
+flow g = qnsg.new(64)
+
+// Concepts thermiques
+flow chaud  = qnsg.add(g, "chaud")
+flow tiede  = qnsg.add(g, "tiède")
+flow froid  = qnsg.add(g, "froid")
+flow glace  = qnsg.add(g, "glace")
+flow vapeur = qnsg.add(g, "vapeur")
+
+// Topologie
+qnsg.link(g, vapeur, chaud,  0.9, 2)   // vapeur CAUSES chaud
+qnsg.link(g, chaud,  tiede,  0.7, 3)
+qnsg.link(g, tiede,  froid,  0.7, 3)
+qnsg.link(g, froid,  glace,  0.9, 2)
+qnsg.link(g, chaud,  froid,  0.2, 3)   // corrélation faible (antonyme)
+
+fprintln "Graphe : " ~ to_string(qnsg.node_count(g)) ~ " nœuds"
+
+// Activation quantique depuis "vapeur"
+qnsg.activate(g, vapeur)
+qnsg.spread(g, vapeur)
+
+fprintln "Propagation depuis 'vapeur' :"
+fprintln "  activation(chaud)  = " ~ to_string(qnsg.activation(g, chaud))
+fprintln "  activation(tiède)  = " ~ to_string(qnsg.activation(g, tiede))
+fprintln "  activation(froid)  = " ~ to_string(qnsg.activation(g, froid))
+fprintln "  activation(glace)  = " ~ to_string(qnsg.activation(g, glace))
+
+// Interférence constructive / destructive
+// chaud et froid ont un lien faible (w=0.2) -> légère interférence destructive
+fprintln ""
+fprintln "Observation (collapse) de 'tiède' :"
+flow dim = qnsg.observe(g, tiede)
+fprintln "  dimension dominante = " ~ to_string(dim)
+
+// Renforcement Hebbien
+qnsg.reinforce(g, vapeur, chaud, 0.05)
+fprintln ""
+fprintln "Après renforcement vapeur->chaud :"
+qnsg.reset(g)
+qnsg.activate(g, vapeur)
+qnsg.spread(g, vapeur)
+fprintln "  activation(chaud) [renforcé] = " ~ to_string(qnsg.activation(g, chaud))
+```
+
+---
+
+## Comparaison NSMG vs QNSG vs QSF
+
+| Critère | NSMG | QSF | QNSG |
+|---------|------|-----|------|
+| Vecteurs | `float[D]` réels | `Complex[D]` | `Complex[D]` |
+| Similarité | Euclidienne | Born rule | Born rule |
+| Topologie | Oui (types arcs) | Non | Oui (types arcs) |
+| Propagation | BFS classique | Superposition | Interférence quantique |
+| Différentiable | Oui (nsmg_diff) | Non | Non (v2) |
+| HNSW | Oui | Non | Non |
+| Cas d'usage | Graphes de connaissances | Représentations ambiguës | Raisonnement analogique |

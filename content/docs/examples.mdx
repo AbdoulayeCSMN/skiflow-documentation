@@ -8,13 +8,19 @@ import { Tabs } from 'nextra/components'
 
 ## Hello World
 
-```skiflow
-fprintln("Bonjour, SkiFlow !")
+```harzourou
+// hello.harz
+fprintln("Bonjour, Harzourou !")
+```
+
+```bash
+harz hello.harz
+# Bonjour, Harzourou !
 ```
 
 ## Fibonacci
 
-```skiflow
+```harzourou
 fun fibonacci(n : int) : int {
   if n <= 1 { return n }
   return fibonacci(n - 1) + fibonacci(n - 2)
@@ -22,7 +28,7 @@ fun fibonacci(n : int) : int {
 
 flow i = 0
 while i <= 10 {
-  fprint(str(fibonacci(i)) + " ")
+  fprint(str(fibonacci(i)) ~ " ")
   i += 1
 }
 // 0 1 1 2 3 5 8 13 21 34 55
@@ -30,9 +36,10 @@ while i <= 10 {
 
 ## Tri à bulles
 
-```skiflow
-fun bubble_sort(arr : list) : list {
+```harzourou
+import list
 
+fun bubble_sort(arr : list) : list {
   flow n   = list.len(arr)
   flow res = arr
   flow i   = 0
@@ -41,9 +48,9 @@ fun bubble_sort(arr : list) : list {
     flow j = 0
     while j < n - i - 1 {
       if res[j] > res[j+1] {
-        flow tmp   = res[j]
-        res        = list.set(res, j, res[j+1])
-        res        = list.set(res, j+1, tmp)
+        flow tmp = res[j]
+        res = list.set(res, j,   res[j+1])
+        res = list.set(res, j+1, tmp)
       }
       j += 1
     }
@@ -58,40 +65,49 @@ fprintln(sorted)  // [11, 12, 22, 25, 34, 64, 90]
 
 ## Pipeline fonctionnel
 
-```skiflow
+```harzourou
 import list
-import math
 
-// Pipeline : générer → filtrer → transformer → réduire
-flow données  = list.range(1, 101)                         // [1..100]
-flow pairs    = filter(fun(x){ return x % 2 == 0 }, données)  // pairs
-flow carrés   = map(fun(x){ return x * x }, pairs)            // carrés
-flow somme    = fold(fun(acc, x){ return acc + x }, 0, carrés) // somme
+// Somme des carrés des nombres pairs de 1 à 100
+flow résultat = list.range(1, 101)
+    |> filter(fun(x){ return x % 2 == 0 })
+    |> map(fun(x){ return x * x })
+    |> fold(0, fun(acc, x){ return acc + x })
 
-fprintln("Somme des carrés des nombres pairs de 1 à 100 : " + str(somme))
+fprintln("Résultat : " ~ str(résultat))   // 171700
+```
+
+## Nombres premiers (crible simple)
+
+```harzourou
+import arithmetic as art
+
+flow limites = [2..=50]
+flow premiers = filter(limites, art.is_prime)
+fprintln(premiers)
+// PersistentVector[2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
 ```
 
 ## Requête HTTP + JSON
 
-```skiflow
+```harzourou
 import net
 import json
 
 try {
   flow réponse = net.get("https://jsonplaceholder.typicode.com/todos/1")
   flow todo    = json.parse(réponse)
-  fprintln("Titre : " + todo["title"])
-  fprintln("Fait  : " + str(todo["completed"]))
+  fprintln("Titre : " ~ todo["title"])
+  fprintln("Fait  : " ~ str(todo["completed"]))
 } catch e {
-  fprintln("Erreur réseau : " + e)
+  fprintln("Erreur réseau : " ~ e)
 }
 ```
 
 ## Gestion des erreurs
 
-```skiflow
+```harzourou
 fun diviser_sûr(a : float, b : float) : float {
-
   if b == 0.0 { throw "Division par zéro interdite" }
   return a / b
 }
@@ -101,47 +117,125 @@ flow paires = [[10.0, 2.0], [5.0, 0.0], [9.0, 3.0]]
 flow i = 0
 while i < list.len(paires) {
   flow p = paires[i]
-
   try {
     flow r = diviser_sûr(p[0], p[1])
-    fprintln(str(p[0]) + " / " + str(p[1]) + " = " + str(r))
+    fprintln(str(p[0]) ~ " / " ~ str(p[1]) ~ " = " ~ str(r))
   } catch e {
-    fprintln("⚠ " + e)
+    fprintln("⚠ " ~ e)
   }
   i += 1
 }
 ```
 
-## Tenseurs et calcul scientifique
+## Statistiques sur une liste
 
-```skiflow
-import tensor
+```harzourou
+import list
 import math
 
-// Normalisation d'un vecteur
-flow v     = tensor.rand_tensor([5])
-flow norme = math.sqrt(fold(fun(acc, x){ return acc + x*x }, 0.0, v))
-flow v_norm = map(fun(x){ return x / norme }, v)
+flow données = [12.5, 7.3, 18.0, 4.2, 9.8, 15.1, 6.7, 11.4]
 
-fprintln("Norme : " + str(norme))
+flow n    = list.len(données)
+flow moy  = list.mean(données)
+flow mini = list.minimum(données)
+flow maxi = list.maximum(données)
+
+// Écart-type
+flow variance = fold(données, 0.0, fun(acc, x){
+  flow d = x - moy
+  return acc + d * d
+}) / n
+flow std = math.sqrt(variance)
+
+fprintln("n    = " ~ str(n))
+fprintln("moy  = " ~ str(moy))
+fprintln("min  = " ~ str(mini))
+fprintln("max  = " ~ str(maxi))
+fprintln("std  = " ~ str(std))
 ```
 
-## Pattern Matching avancé
+## Lecture / écriture de fichiers
 
-```skiflow
-fun classifier(score : int) : string {
+```harzourou
+import io
+import json
 
-  match score {
-    100         : return "Parfait !"
-    90          : return "Excellent"
-    75          : return "Bien"
-    default     : {
-      if score >= 60 { return "Passable" }
-      return "Insuffisant"
-    }
-  }
+// Écrire un fichier JSON
+flow données = [1, 2, 3, 4, 5]
+io.write_file("sortie.json", json.pretty(données))
+fprintln("Fichier écrit.")
+
+// Relire
+flow contenu = io.read_file("sortie.json")
+flow chargé  = json.parse(contenu)
+fprintln(chargé)   // [1, 2, 3, 4, 5]
+```
+
+## Chronométrage
+
+```harzourou
+flow début = now_ms()
+
+// Calcul intensif
+flow résultat = fold([1..=10000], 0, fun(acc, x){ return acc + x })
+
+flow durée = now_ms() - début
+fprintln("Somme : " ~ str(résultat))
+fprintln("Temps : " ~ str(durée) ~ " ms")
+```
+
+## Modules — définir et importer
+
+```harzourou
+// outils.mharz
+module outils
+
+fun clamp(x : float, lo : float, hi : float) : float {
+  import math
+  return math.max(lo, math.min(x, hi))
 }
 
-fprintln(classifier(100))  // Parfait !
-fprintln(classifier(85))   // Insuffisant → Passable
+fun normaliser(liste) {
+  import list
+  flow mi = list.minimum(liste)
+  flow ma = list.maximum(liste)
+  flow rng = ma - mi
+  return map(liste, fun(x){ return (x - mi) / rng })
+}
+```
+
+```harzourou
+// main.harz
+import outils
+
+flow v = [5.0, 1.0, 9.0, 3.0, 7.0]
+flow n = outils.normaliser(v)
+fprintln(n)   // valeurs dans [0.0, 1.0]
+```
+
+## Projet complet avec Aiki
+
+```bash
+# 1. Initialiser un projet
+aiki init mon-projet
+cd mon-projet
+
+# 2. Ajouter des dépendances
+aiki add math
+aiki add assert
+
+# 3. Écrire le code — main.harz
+# 4. Exécuter
+aiki run start
+
+# 5. Lancer les tests
+aiki run test
+```
+
+```harzourou
+// main.harz
+import math
+
+flow angle = math.pi / 6
+fprintln("sin(30°) = " ~ str(math.sin(angle)))   // 0.5
 ```

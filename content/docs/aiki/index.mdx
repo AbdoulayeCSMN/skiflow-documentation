@@ -1,0 +1,80 @@
+---
+title: Aiki — Vue d'ensemble
+---
+
+import { Callout, Cards } from 'nextra/components'
+
+# Aiki — Gestionnaire de paquets Harzourou
+
+**Aiki** (_"travail"_ en haoussa) est le gestionnaire de paquets officiel de l'écosystème Harzourou. Il est écrit en Rust, multiplateforme et conçu pour une expérience développeur moderne.
+
+<Callout type="info">
+  Aiki v1.0.0 — gestionnaire de paquets officiel Harzourou.
+</Callout>
+
+## Fonctionnalités
+
+- **Manifeste `Aiki.toml`** — déclarer les dépendances, scripts et configuration du projet
+- **Lockfile `Aiki.lock`** — snapshots reproductibles des versions résolues
+- **Résolution de dépendances** — résolveur BFS avec support des contraintes sémantiques
+- **Runner de scripts** — exécuter des scripts nommés avec injection des flags `harz`
+- **Build intégré** — appeler `harz` sur le point d'entrée avec toutes les options
+- **Registre de paquets** — index local + architecture prête pour un registre distant
+- **Doctor** — diagnostic complet de l'environnement
+
+## Installation rapide
+
+```bash
+git clone https://github.com/harzourou/aiki
+cd aiki
+cargo build --release
+sudo cp target/release/aiki /usr/local/bin/aiki
+```
+
+## Démarrage rapide
+
+```bash
+# Créer un projet
+aiki init mon-projet
+cd mon-projet
+
+# Ajouter une dépendance
+aiki add math
+
+# Installer toutes les dépendances
+aiki install
+
+# Exécuter le script "start"
+aiki run start
+
+# Compiler
+aiki build
+```
+
+## Structure d'un projet Aiki
+
+```text
+mon-projet/
+├── Aiki.toml       ← manifeste (à committer)
+├── Aiki.lock       ← lockfile  (à committer)
+├── main.harz       ← point d'entrée
+├── .gitignore
+└── .aiki/          ← géré par Aiki (ne pas éditer)
+    ├── packages/   ← paquets installés
+    ├── cache/      ← cache de téléchargement
+    └── build/      ← artefacts de compilation
+```
+
+## Référence des commandes
+
+<Cards>
+  <Cards.Card title="Commandes" href="/docs/aiki/commands" arrow>
+    Référence complète de toutes les commandes Aiki
+  </Cards.Card>
+  <Cards.Card title="Aiki.toml" href="/docs/aiki/manifest" arrow>
+    Format du manifeste et toutes les options
+  </Cards.Card>
+  <Cards.Card title="Configuration globale" href="/docs/aiki/config" arrow>
+    ~/.aiki/config.toml — chemins, registre, binaire harz
+  </Cards.Card>
+</Cards>

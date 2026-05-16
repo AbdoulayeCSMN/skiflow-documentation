@@ -1,0 +1,75 @@
+---
+title: Configuration globale
+---
+
+import { Callout } from 'nextra/components'
+
+# Configuration globale d'Aiki
+
+La configuration globale est stockée dans `~/.aiki/config.toml`. Elle s'applique à tous les projets.
+
+## Fichier de configuration
+
+```toml
+# ~/.aiki/config.toml
+
+# URL du registre de paquets
+registry_url = "https://registry.harzourou.dev"
+
+# Chemin du binaire harz (auto-détecté si absent)
+# harz_binary = "/usr/local/bin/harz"
+
+# Dossier HarzourouModules (stdlib)
+# harzourou_path = "/usr/local/lib/HarzourouModules"
+
+# Dossier de cache global des paquets téléchargés
+# cache_dir = "/home/user/.aiki/cache"
+
+# Sortie verbeuse par défaut
+verbose = false
+```
+
+## Résolution du binaire `harz`
+
+Aiki cherche le compilateur dans cet ordre :
+
+1. `[harzourou].compiler` dans `Aiki.toml` du projet courant
+2. `harz_binary` dans `~/.aiki/config.toml`
+3. `harz` sur le `PATH`
+4. `harzourou` sur le `PATH` (nom alternatif)
+
+## Variables d'environnement
+
+| Variable | Rôle |
+|----------|------|
+| `HARZOUROU_PATH` | Chemin vers `HarzourouModules/` (bibliothèque standard) |
+| `HARZOUROU_PKG_PATH` | Chemins des paquets installés (injecté automatiquement par Aiki) |
+
+<Callout type="info">
+  `HARZOUROU_PKG_PATH` est injecté par Aiki avant chaque exécution. Vous n'avez pas à le définir manuellement.
+</Callout>
+
+## Structure de `~/.aiki/`
+
+```text
+~/.aiki/
+├── config.toml      ← configuration globale
+├── registry.json    ← index du registre mis en cache
+└── cache/           ← archives téléchargées (v1.1+)
+```
+
+## Configurer via `aiki doctor`
+
+`aiki doctor` vérifie la configuration et affiche des suggestions :
+
+```bash
+aiki doctor
+```
+
+Si `HARZOUROU_PATH` n'est pas défini :
+
+```text
+  ! HARZOUROU_PATH not set
+    → set HARZOUROU_PATH to your HarzourouModules/ directory
+    → or set `harzourou.modules_path` in Aiki.toml
+```
